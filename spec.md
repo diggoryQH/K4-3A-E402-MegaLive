@@ -50,7 +50,7 @@ Quizlet AI:
 - Mức prototype:
   - [] Sketch  [x] Mock  [ ] Working
   - Phần thật: `codebase/server.mjs` gọi OpenAI Responses API để tạo 20 câu quiz từ nội dung bài học.
-  - Phần mock: UI VLearn, slide preview, đăng nhập, retrieval từ toàn bộ data VLearn.
+  - Phần mock: UI VLearn, slide preview.
 
 - Automation:
   - [x] Augment  [x] Conditional  [ ] Automate
