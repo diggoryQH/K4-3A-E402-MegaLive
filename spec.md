@@ -1,6 +1,6 @@
 # # AI SPEC - VLearn Quiz Ôn Tập Có Nguồn - Nhóm C3 - Zone E402
-*`markdown
-# AI SPEC — [Tên lát cắt] · Nhóm [XX] · Zone [X]
+
+#
 Hướng: [X] A — VLearn  [ ] B — Trợ lý Học viên  [ ] C — Làn mở
 Loại: [ ] Tối ưu tính năng có sẵn  [X] Tính năng mới
 
