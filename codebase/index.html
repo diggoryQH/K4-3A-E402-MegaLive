@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -354,6 +355,14 @@
       line-height: 1.1;
     }
 
+    .slide-kicker {
+      color: #15508d;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
     .slide-page h3 span {
       color: #168ca0;
     }
@@ -655,6 +664,65 @@
       display: none !important;
     }
 
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .selected-source {
+      border: 1px solid #dce5ef;
+      border-radius: 12px;
+      padding: 14px;
+      background: #fbfdff;
+      color: #52637a;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .selected-source strong {
+      display: block;
+      color: #243244;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .weak-topic-list {
+      display: grid;
+      gap: 10px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .weak-topic {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid #dce5ef;
+      border-left: 6px solid var(--amber);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fffdf6;
+    }
+
+    .weak-topic strong {
+      color: #17202a;
+    }
+
+    .weak-topic span {
+      color: var(--amber);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
     /* VLearn-style layout pass */
     body {
       background: #f8fafc;
@@ -756,6 +824,105 @@
       padding: 0;
       gap: 0;
       background: #f8fafc;
+    }
+
+    .vlearn-main-nav {
+      min-height: 74px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 28px;
+      padding: 0 28px;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .vlearn-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 190px;
+      color: #15508d;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .vlearn-logo strong span {
+      color: #d11f2a;
+    }
+
+    .vlearn-logo-mark {
+      position: relative;
+      width: 38px;
+      height: 34px;
+      display: inline-block;
+    }
+
+    .vlearn-logo-mark::before {
+      content: "";
+      position: absolute;
+      inset: 7px 0 0 0;
+      background: #15508d;
+      clip-path: polygon(0 0, 48% 44%, 100% 0, 100% 60%, 48% 100%, 0 60%);
+    }
+
+    .vlearn-logo-mark::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 18px;
+      height: 22px;
+      background: #d11f2a;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .vlearn-menu {
+      display: flex;
+      align-items: stretch;
+      gap: 18px;
+      min-height: 74px;
+    }
+
+    .vlearn-menu button {
+      border: 0;
+      background: transparent;
+      color: #2f3a46;
+      font-weight: 850;
+      padding: 0 8px;
+      border-bottom: 4px solid transparent;
+      cursor: default;
+    }
+
+    .vlearn-menu button.active {
+      color: #15508d;
+      border-bottom-color: #d11f2a;
+    }
+
+    .vlearn-user-tools {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .vlearn-user-tools strong,
+    .vlearn-user-tools button {
+      border: 0;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #15508d;
+      font-weight: 900;
+      padding: 6px 8px;
+    }
+
+    .vlearn-user-tools button {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      padding: 0;
     }
 
     .topbar {
@@ -972,6 +1139,7 @@
     }
 
     @media (max-width: 640px) {
+
       .main,
       .sidebar {
         padding: 18px;
@@ -985,6 +1153,7 @@
         grid-template-columns: 1fr;
       }
     }
+
     /* Final VLearn-style redesign */
     .app {
       grid-template-columns: 386px minmax(0, 1fr);
@@ -1062,7 +1231,7 @@
     }
 
     .step-list::after {
-      content: "Slide - GV Mai Anh    Đang học\a 4-day02-lecture-slides-v2\a b2\a Day 02 _ AI Product Lab\a Day 02_C401_Xác Định Bài Toán\a Day 02_C401_AI Product Lab";
+      content: "Slides từ data/vlearn-pack\a d1-slide-hackathon.pdf\a d2-slide-hackathon.pdf\a Chọn bộ bài giảng ở khung bên phải\a Dùng nút Trang trước / Trang sau để đổi slide";
       white-space: pre-line;
       display: block;
       margin-top: 14px;
@@ -1539,6 +1708,18 @@
     .vlearn-nav-item {
       padding: 11px 10px;
       font-size: 13px;
+      border: 0;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 850;
+    }
+
+    .vlearn-nav-item span {
+      display: block;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 3px;
     }
 
     .slide-canvas {
@@ -1546,6 +1727,45 @@
       place-items: center;
       align-items: center;
       overflow: auto;
+    }
+
+    .pdf-slide-shell {
+      position: relative;
+      width: 100%;
+      min-height: min(680px, calc(100vh - 230px));
+      display: grid;
+      grid-template-rows: minmax(420px, 1fr) auto;
+      gap: 14px;
+    }
+
+    .pdf-slide {
+      width: 100%;
+      min-height: min(620px, calc(100vh - 300px));
+      border: 1px solid #dce5ef;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 14px 38px rgba(15, 23, 42, 0.07);
+    }
+
+    .slide-context-card {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border: 1px solid #dce5ef;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .slide-context-card h3 {
+      margin: 0;
+      color: #182230;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .slide-context-card p {
+      margin: 0;
+      color: #667085;
     }
 
     .slide-page {
@@ -1559,7 +1779,14 @@
 
     .slide-page h3 {
       font-size: clamp(32px, 2.8vw, 44px);
-      white-space: nowrap;
+      white-space: normal;
+    }
+
+    .slide-kicker {
+      color: #15508d;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
     }
 
     .slide-subtitle {
@@ -1579,8 +1806,44 @@
     }
 
     .vlearn-frame::after {
-      padding: 9px 16px;
+      content: none;
+      display: none;
+    }
+
+    .slide-pager {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      color: #667085;
+      background: #ffffff;
+      border-top: 1px solid #e5ebf2;
       font-size: 13px;
+    }
+
+    .slide-pager span {
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .pager-button {
+      min-height: 34px;
+      border: 1px solid #dce5ef;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #123b67;
+      font-weight: 850;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    .pager-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
     }
 
     @media (max-width: 1500px) {
@@ -1617,6 +1880,21 @@
         grid-template-columns: 1fr;
       }
 
+      .vlearn-main-nav {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 14px 18px;
+      }
+
+      .vlearn-menu {
+        min-height: 42px;
+        overflow-x: auto;
+      }
+
+      .vlearn-user-tools {
+        justify-self: start;
+      }
+
       .sidebar {
         position: static;
         height: auto;
@@ -1633,42 +1911,158 @@
         position: static;
       }
     }
+
+    /* CP4 polish: remove the outer progress sidebar and let the VLearn workspace breathe. */
+    .app {
+      display: block;
+      min-height: 100vh;
+      background: #f5f8fc;
+    }
+
+    .main {
+      min-height: 100vh;
+      width: 100%;
+      background: #f5f8fc;
+    }
+
+    .vlearn-main-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      min-height: 78px;
+      padding-inline: clamp(20px, 4vw, 56px);
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+    }
+
+    .topbar {
+      min-height: 92px;
+      padding-inline: clamp(20px, 4vw, 56px);
+    }
+
+    #setup-screen.panel {
+      margin: 24px clamp(20px, 4vw, 56px) 40px;
+    }
+
+    #setup-screen .content-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+      gap: 24px;
+      align-items: start;
+    }
+
+    #setup-screen .field-grid {
+      top: 112px;
+      border-radius: 12px;
+      box-shadow: 0 18px 46px rgba(15, 23, 42, 0.07);
+    }
+
+    .vlearn-frame {
+      min-height: calc(100vh - 220px);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vlearn-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .slide-canvas {
+      padding: 18px;
+      background: #f8fafc;
+    }
+
+    .pdf-slide-shell {
+      min-height: calc(100vh - 300px);
+    }
+
+    .pdf-slide {
+      min-height: calc(100vh - 340px);
+      background: #ffffff;
+    }
+
+    .pdf-open-link {
+      justify-self: end;
+      color: #15508d;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .pdf-open-link:hover {
+      text-decoration: underline;
+    }
+
+    .slide-context-card {
+      grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.72fr);
+      align-items: center;
+      gap: 10px 16px;
+    }
+
+    .slide-context-card .slide-kicker {
+      grid-row: span 2;
+    }
+
+    .slide-context-card h3 {
+      font-size: 17px;
+    }
+
+    .slide-context-card p {
+      font-size: 14px;
+    }
+
+    .selected-source,
+    #setup-screen .lesson-preview {
+      border-radius: 10px;
+    }
+
+    #setup-screen .lesson-preview {
+      max-height: 220px;
+    }
+
+    #setup-screen .lesson-preview ul {
+      display: grid;
+      gap: 6px;
+    }
+
+    @media (max-width: 1180px) {
+      #setup-screen .content-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "controls"
+          "slide";
+      }
+
+      .vlearn-body {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">VL</div>
-        <h1>Quiz ôn tập VLearn</h1>
-    
-      </div>
-
-      <div class="step-list" aria-label="Tiến trình">
-        <button class="step is-active" data-step="setup" type="button">
-          <div class="step-number">1</div>
-          <div>Chọn nội dung</div>
-        </button>
-        <button class="step is-locked" data-step="quiz" type="button" aria-disabled="true">
-          <div class="step-number">2</div>
-          <div>Làm 20 câu quiz</div>
-        </button>
-        <button class="step is-locked" data-step="result" type="button" aria-disabled="true">
-          <div class="step-number">3</div>
-          <div>Xem kết quả</div>
-        </button>
-      </div>
-
-      <div class="sidebar-note">
-        AI trong bản thật sẽ đọc nội dung lab/slide, chọn trọng tâm, tạo câu hỏi, đáp án, giải thích và nguồn đọc lại.
-      </div>
-    </aside>
-
     <main class="main">
+      <nav class="vlearn-main-nav" aria-label="VLearn">
+        <div class="vlearn-logo" aria-label="VLearn">
+          <span class="vlearn-logo-mark"></span>
+          <strong><span>V</span>Learn</strong>
+        </div>
+        <div class="vlearn-menu">
+          <button type="button">Trang chủ</button>
+          <button type="button">Khóa học</button>
+          <button type="button">Luyện tập</button>
+          <button class="active" type="button">Bài Giảng</button>
+        </div>
+        <div class="vlearn-user-tools">
+          <span>EN</span>
+          <strong>VI</strong>
+          <button type="button" aria-label="Tài khoản">HV</button>
+        </div>
+      </nav>
       <div class="topbar">
         <div>
-          <h2 id="screen-title">Tạo quiz từ một nội dung học</h2>
-          <p id="screen-subtitle">Học viên chọn một bài/lab trên VLearn, hệ thống tạo bộ 20 câu để tự kiểm tra mức hiểu trước quiz.</p>
+          <h2 id="screen-title">Tạo quiz từ slide VLearn</h2>
+          <p id="screen-subtitle">Học viên chọn một slide/bài giảng đã học, hệ thống tạo 20 câu để tự kiểm tra và chỉ rõ
+            phần cần ôn lại.</p>
         </div>
         <div class="status-pill" id="ai-status">
           <span class="dot" aria-hidden="true"></span>
@@ -1680,21 +2074,23 @@
         <div class="panel-inner content-grid">
           <div class="field-grid">
             <label>
-              Chọn bài/lab mẫu
+              Chọn slide bài giảng
               <select id="lesson-select">
-                <option value="product">Bài 2 DAY02 - Quick Problem Card</option>
-                <option value="eval">Day 06 - Đánh giá prototype AI bằng golden set</option>
-                <option value="prompt">Lab - Viết prompt có ràng buộc nguồn</option>
+                <option value="day1">Day 1 - AI & LLM Foundation</option>
+                <option value="day2">Day 2 - Xác định bài toán cho AI</option>
               </select>
             </label>
 
-            <label>
-              Nội dung cụ thể cần ôn tập
-              <textarea id="content-input" placeholder="Dán đoạn lab, ý chính của slide hoặc nội dung bạn muốn hệ thống tạo quiz..."></textarea>
-            </label>
+            <label class="sr-only" for="content-input">Nội dung cụ thể dùng để tạo quiz</label>
+            <textarea id="content-input" class="sr-only" aria-hidden="true"></textarea>
+
+            <div class="selected-source">
+              <strong>Bài giảng dùng để tạo quiz</strong>
+              <span id="selected-source-text">Hệ thống sẽ dùng nội dung slide đang chọn.</span>
+            </div>
 
             <div class="lesson-preview">
-              <h3 id="lesson-title">Day 05 - Xác định bài toán AI Product</h3>
+              <h3 id="lesson-title">Slide đang chọn</h3>
               <ul id="lesson-points"></ul>
               <div class="context-preview" id="content-preview"></div>
             </div>
@@ -1752,8 +2148,9 @@
 
         <div class="panel">
           <div class="panel-inner">
-            <h3>Phần nên đọc lại</h3>
-            <ul id="weak-topics"></ul>
+            <h3>Chủ đề cần ôn tập lại</h3>
+            <p class="explain">Các chủ đề bên dưới được tổng hợp từ những câu bạn trả lời sai.</p>
+            <ul class="weak-topic-list" id="weak-topics"></ul>
             <div class="actions">
               <button id="retry-btn" class="button" type="button">Làm lại quiz</button>
               <button id="new-lesson-btn" class="button secondary" type="button">Chọn nội dung khác</button>
@@ -1768,52 +2165,112 @@
 
   <script>
     const lessons = {
-      product: {
-        title: "Bài 2 DAY02 - Quick Problem Card",
-        slidePage: "Slide 28/76",
-        defaultContent: "Quick Problem Card gồm 6 ô: Bài toán là vấn đề cụ thể cần giải quyết, không bao gồm giải pháp. Đối tượng ảnh hưởng là cá nhân hoặc bộ phận chịu tác động trực tiếp. Quy trình hiện tại là các bước vận hành hiện có. Nút thắt và tác động là khâu gây chậm trễ, sai sót hoặc lặp lại. Chỉ số đo thành công là chỉ số định lượng chứng minh hiệu quả cải tiến. Định hướng giải pháp có thể là No AI, Rule, Workflow, Agent hoặc chưa xác định.",
-        points: [
-          "Bài toán phải là một câu problem, không bao gồm giải pháp.",
-          "Đối tượng ảnh hưởng là người hoặc bộ phận chịu tác động trực tiếp.",
-          "Quy trình hiện tại cần mô tả 3-7 bước đang diễn ra.",
-          "Nút thắt và tác động chỉ ra chỗ chậm trễ, sai sót, lặp lại hoặc tổn thất.",
-          "Chỉ số đo thành công phải định lượng được hiệu quả cải tiến.",
-          "Định hướng giải pháp có thể là No AI, Rule, Workflow, Agent hoặc chưa xác định."
-        ],
-        sources: [
-          ["VLearn - Bài 2 DAY02", "Slide 28/76: Quick Problem Card."],
-          ["Ô Bài toán", "Vấn đề cụ thể cần giải quyết, không bao gồm giải pháp."],
-          ["Ô Nút thắt & Tác động", "Khâu gây chậm trễ, sai sót, lặp lại hoặc tổn thất cụ thể."]
+      day1: {
+        title: "Day 1 - AI & LLM Foundation",
+        pdf: "/data/vlearn-pack/slides/d1-slide-hackathon.pdf",
+        totalPages: 29,
+        course: "Bài giảng Day 1",
+        deck: ["AI & LLM Foundation", "AI / ML / Deep Learning / GenAI", "Discriminative - Generative - Agentic", "Lịch sử AI", "LLM là gì?"],
+        slides: [
+          {
+            page: 3,
+            title: "AI, ML, Deep Learning, GenAI, LLM",
+            section: "Bức tranh AI",
+            subtitle: "Từ rộng đến hẹp trong cùng một hệ",
+            content: "AI là khái niệm rộng nhất cho các hệ thống có yếu tố thông minh. Machine Learning học từ dữ liệu thay vì viết luật tay. Deep Learning dùng mạng nơ-ron nhiều tầng để tự học đặc trưng. Generative AI sinh nội dung mới như văn bản, ảnh, code. LLM là model nền chuyên ngôn ngữ, không phải toàn bộ AI nhưng là nền tảng của nhiều trải nghiệm AI hiện nay.",
+            points: ["AI là lớp khái niệm rộng nhất.", "ML học từ dữ liệu thay vì rule thủ công.", "GenAI sinh nội dung mới.", "LLM là model nền chuyên ngôn ngữ."],
+            sources: [["d1-slide-hackathon.pdf", "Trang 3: AI, ML, Deep Learning, GenAI, LLM."]]
+          },
+          {
+            page: 4,
+            title: "Ba nhóm AI chính",
+            section: "Phân loại năng lực AI",
+            subtitle: "Phân loại, sinh nội dung và hành động",
+            content: "Discriminative AI dùng để phân loại hoặc dự đoán, ví dụ lọc spam, phát hiện gian lận, nhận diện ảnh. Generative AI sinh ra nội dung mới như văn bản, ảnh, code. Agentic AI nhận mục tiêu rồi tự lập kế hoạch, dùng công cụ và hành động qua nhiều bước. LLM là engine chung cho nhiều trải nghiệm Generative và Agentic.",
+            points: ["Discriminative AI phân loại hoặc dự đoán.", "Generative AI sinh nội dung mới.", "Agentic AI có goal, plan và action.", "LLM là engine chung cho GenAI và Agentic AI."],
+            sources: [["d1-slide-hackathon.pdf", "Trang 4: Ba nhóm AI chính."]]
+          },
+          {
+            page: 6,
+            title: "1980: Hệ chuyên gia",
+            section: "Lịch sử AI",
+            subtitle: "Tập trung giải thật tốt một miền hẹp",
+            content: "Hệ chuyên gia đặt lại vấn đề: nếu AI chỉ giải thật tốt một loại bài toán chuyên môn hẹp thì sao. Thay vì theo đuổi trí tuệ tổng quát, hệ chuyên gia mã hóa tri thức chuyên gia thành luật để giải quyết một miền hẹp. Bài học sản phẩm là chọn phạm vi đủ hẹp để chứng minh giá trị.",
+            points: ["Hệ chuyên gia tập trung vào miền hẹp.", "Tri thức chuyên gia được mã hóa thành luật.", "Không phải bài toán nào cũng cần AI tổng quát.", "Scope hẹp giúp dễ chứng minh giá trị."],
+            sources: [["d1-slide-hackathon.pdf", "Trang 6: 1980 - Hệ chuyên gia."]]
+          },
+          {
+            page: 8,
+            title: "2017: Transformer",
+            section: "Nền tảng LLM",
+            subtitle: "Mô hình hiểu ngôn ngữ linh hoạt hơn",
+            content: "Transformer là bước ngoặt vì giúp mô hình hiểu ngôn ngữ theo cách linh hoạt hơn: mỗi từ có thể nhìn sang những từ quan trọng khác trong câu thay vì chỉ đi tuần tự từng bước. Transformer trở thành nền móng kỹ thuật cho GPT, BERT và làn sóng LLM sau đó.",
+            points: ["Transformer không chỉ xử lý tuần tự từng bước.", "Attention giúp từ nhìn sang những từ quan trọng khác.", "Transformer là nền móng của GPT và BERT.", "Đây là bước ngoặt của làn sóng LLM."],
+            sources: [["d1-slide-hackathon.pdf", "Trang 8: 2017 - Transformer."]]
+          },
+          {
+            page: 10,
+            title: "LLM là gì?",
+            section: "LLM Foundation",
+            subtitle: "Một bộ não nền, không phải chỉ là chatbot",
+            content: "LLM là mô hình ngôn ngữ lớn, thường dựa trên kiến trúc Transformer, được huấn luyện trên lượng văn bản rất lớn để đoán mảnh chữ tiếp theo trong ngữ cảnh. Nhờ được huấn luyện rộng, cùng một model có thể làm nhiều việc như tóm tắt tài liệu, viết code, dịch và phân tích. Chatbot chỉ là lớp sản phẩm đóng gói quanh model nền.",
+            points: ["LLM học cách đoán phần chữ tiếp theo trong ngữ cảnh.", "LLM thường dựa trên Transformer.", "Một model nền có thể làm nhiều nhiệm vụ.", "Chatbot chỉ là một lớp giao diện bên ngoài LLM."],
+            sources: [["d1-slide-hackathon.pdf", "Trang 10: LLM là gì."]]
+          }
         ]
       },
-      eval: {
-        title: "Day 06 - Đánh giá prototype AI bằng golden set",
-        defaultContent: "Nội dung cần ôn: golden set tối thiểu 20 case, quality bar chốt trước khi đo, cách ghi nhận kết quả pass/fail và phân tích failure sau mỗi lượt chạy.",
-        points: [
-          "Golden set cần có ít nhất 20 case.",
-          "Quality bar phải chốt trước khi nhìn kết quả.",
-          "Kết quả xấu vẫn có giá trị nếu ghi nhận trung thực.",
-          "Mỗi case cần định nghĩa pass/fail kiểm chứng được."
-        ],
-        sources: [
-          ["Guide, mục 2.6", "Định nghĩa tốt, golden set và quality bar."],
-          ["Guide, mục 4.1", "Chạy trọn bộ test, ghi đủ case fail."],
-          ["Rubric R4", "Kiểm thử chiếm 15 điểm trong bài nộp."]
-        ]
-      },
-      prompt: {
-        title: "Lab - Viết prompt có ràng buộc nguồn",
-        defaultContent: "Nội dung cần ôn: prompt chỉ dùng tài liệu được cấp, không bịa khi thiếu căn cứ, câu trả lời cần nguồn để kiểm chứng và dữ liệu người dùng không phải chỉ thị hệ thống.",
-        points: [
-          "Prompt cần nêu rõ hệ thống chỉ dùng tài liệu được cấp.",
-          "Nếu không đủ căn cứ, hệ thống cần hỏi lại hoặc từ chối.",
-          "Câu trả lời học tập nên có nguồn để người học kiểm chứng.",
-          "Không để nội dung người dùng nhập trở thành chỉ thị hệ thống."
-        ],
-        sources: [
-          ["Data README", "Nội dung học viên nhập là dữ liệu, không phải chỉ thị."],
-          ["HAX G10", "Thu hẹp phạm vi khi nghi ngờ."],
-          ["PAIR Trust", "Tin đúng mức quan trọng hơn tin tối đa."]
+      day2: {
+        title: "Day 2 - Xác định bài toán cho AI",
+        pdf: "/data/vlearn-pack/slides/d2-slide-hackathon.pdf",
+        totalPages: 29,
+        course: "Bài giảng Day 2",
+        deck: ["Problem Discovery", "Double Diamond", "4 lenses", "PAIR Reframe", "Quick Problem Card"],
+        slides: [
+          {
+            page: 3,
+            title: "Tìm đúng vấn đề trước khi tìm giải pháp",
+            section: "Double Diamond",
+            subtitle: "Giải pháp xuất sắc cho sai vấn đề vẫn là rủi ro",
+            content: "Mô hình Double Diamond gồm Diamond 1 để tìm đúng vấn đề và Diamond 2 để tìm đúng giải pháp. Discover là mở rộng khảo sát vấn đề, Define là thu hẹp để xác định đúng bài toán gốc. Develop là mở rộng nhiều giải pháp tiềm năng, Deliver là chọn và triển khai. Ý chính: phải tìm đúng vấn đề trước khi chọn giải pháp.",
+            points: ["Diamond 1 giúp tìm đúng vấn đề.", "Discover mở rộng, Define thu hẹp.", "Diamond 2 giúp tìm đúng giải pháp.", "Không nên nhảy vào giải pháp quá sớm."],
+            sources: [["d2-slide-hackathon.pdf", "Trang 3: Tìm đúng vấn đề - Double Diamond."]]
+          },
+          {
+            page: 4,
+            title: "Diamond 1 - Tìm đúng vấn đề",
+            section: "Problem Discovery",
+            subtitle: "Phân kỳ để hiểu sâu, hội tụ để chọn chính xác",
+            content: "Ở pha Discover, nhóm mở rộng góc nhìn bằng quan sát thực tế, phỏng vấn người dùng, khảo sát, nhật ký hành vi, phân tích dữ liệu và stakeholder mapping. Ở pha Define, nhóm thu hẹp bằng affinity mapping, 5 Whys, ma trận tác động - nỗ lực, dot voting, How Might We và problem statement.",
+            points: ["Discover dùng quan sát, phỏng vấn, khảo sát và dữ liệu.", "Define dùng affinity mapping, 5 Whys và impact-effort.", "Mục tiêu là chọn đúng bài toán gốc.", "Problem statement là đầu ra quan trọng."],
+            sources: [["d2-slide-hackathon.pdf", "Trang 4: Diamond 1 - Tìm đúng vấn đề."]]
+          },
+          {
+            page: 6,
+            title: "Tìm bài toán AI ở đâu?",
+            section: "4 lenses",
+            subtitle: "Quan sát hoạt động thực tế xung quanh",
+            content: "Có thể tìm bài toán AI từ bốn lăng kính: tác vụ lặp lại, công việc tiêu tốn thời gian, lợi thế của AI, và điểm đau người dùng. Nhóm cần tập trung nhận diện vấn đề trước, chưa vội đề xuất giải pháp. Đây là bước giúp lọc ra các bài toán có khả năng tạo giá trị thật.",
+            points: ["Repetitive: tác vụ lặp lại, cần chuẩn hóa.", "Time-consuming: công việc tốn nhiều thời gian.", "AI advantage: AI có lợi thế về ngữ cảnh, ngôn ngữ, tổng hợp.", "User pain points: người dùng đang khó khăn hoặc tắc nghẽn."],
+            sources: [["d2-slide-hackathon.pdf", "Trang 6: Tìm bài toán AI ở đâu - 4 lenses."]]
+          },
+          {
+            page: 8,
+            title: "PAIR - Reframe câu hỏi",
+            section: "PAIR",
+            subtitle: "Hỏi về bài toán trước, hỏi về AI sau",
+            content: "PAIR khuyến nghị đổi câu hỏi 'Can we use AI to...' thành hai câu hỏi: 'How might we solve...' và 'Can AI solve this problem in a unique way?'. Câu hỏi đúng quyết định bài toán nhóm giải và giải pháp nhóm chọn. AI chỉ là một phương án trong nhiều phương án khả dĩ.",
+            points: ["Không bắt đầu bằng câu hỏi có dùng AI được không.", "Bắt đầu bằng how might we solve.", "Sau đó mới hỏi AI có giải theo cách khác biệt không.", "AI chỉ là một phương án, không phải mặc định."],
+            sources: [["d2-slide-hackathon.pdf", "Trang 8: PAIR - Reframe câu hỏi."]]
+          },
+          {
+            page: 9,
+            title: "Quick Problem Card",
+            section: "Problem Statement",
+            subtitle: "Khung định hình bài toán",
+            content: "Quick Problem Card gồm 6 ô: Bài toán là vấn đề cụ thể cần giải quyết, không bao gồm giải pháp. Đối tượng ảnh hưởng là cá nhân hoặc bộ phận chịu tác động trực tiếp. Quy trình hiện tại là các bước vận hành hiện có. Nút thắt và tác động là khâu gây chậm trễ, sai sót hoặc lặp lại. Chỉ số đo thành công là chỉ số định lượng chứng minh hiệu quả cải tiến. Định hướng giải pháp có thể là No AI, Rule, Workflow, Agent hoặc chưa xác định.",
+            points: ["Bài toán phải cụ thể và không chứa giải pháp.", "Actor là người hoặc bộ phận chịu tác động trực tiếp.", "Workflow nên có 3-7 bước hiện tại.", "Success metric phải định lượng được."],
+            sources: [["d2-slide-hackathon.pdf", "Trang 9: Quick Problem Card."]]
+          }
         ]
       }
     };
@@ -1844,7 +2301,8 @@
     let quizBank = [...fallbackQuizBank];
 
     const state = {
-      lessonKey: "product",
+      lessonKey: "day1",
+      slideIndex: 0,
       answers: {},
       quizGenerated: false,
       resultReady: false,
@@ -1856,6 +2314,7 @@
     const resultScreen = document.getElementById("result-screen");
     const lessonSelect = document.getElementById("lesson-select");
     const contentInput = document.getElementById("content-input");
+    const selectedSourceText = document.getElementById("selected-source-text");
     const contentPreview = document.getElementById("content-preview");
     const selectedContext = document.getElementById("selected-context");
     const lessonTitle = document.getElementById("lesson-title");
@@ -1884,8 +2343,32 @@
       });
     }
 
+    function getCurrentSlide() {
+      const lesson = lessons[state.lessonKey];
+      const page = state.slideIndex + 1;
+      return lesson.slides.find((slide) => slide.page === page) || {
+        page,
+        title: `Trang ${page}`,
+        section: "Bài giảng VLearn",
+        subtitle: "Trang slide đang xem trong file PDF gốc.",
+        content: `Trang ${page} trong ${lesson.title}.`,
+        points: ["Trang này thuộc file slide gốc trong data/vlearn-pack.", "Dùng nút Trang trước / Trang sau để chuyển qua các slide khác."],
+        sources: [[lesson.pdf.replace("/data/vlearn-pack/slides/", ""), `Trang ${page}/${lesson.totalPages}.`]]
+      };
+    }
+
+    function getLessonQuizContext(lesson) {
+      return lesson.slides.map((slide) => [
+        `Trang ${slide.page}: ${slide.title}`,
+        `Chủ đề: ${slide.section}`,
+        `Ý chính: ${slide.content}`,
+        `Nguồn: ${slide.sources?.[0]?.[1] || slide.sources?.[0]?.[0] || lesson.title}`
+      ].join("\n")).join("\n\n");
+    }
+
     function getContentText() {
-      return contentInput.value.trim();
+      const content = contentInput.value.trim();
+      return content || getLessonQuizContext(lessons[state.lessonKey]);
     }
 
     function excerpt(text, maxLength = 260) {
@@ -1893,74 +2376,87 @@
       return text.length > maxLength ? `${text.slice(0, maxLength).trim()}...` : text;
     }
 
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
     function renderLesson() {
       const lesson = lessons[state.lessonKey];
-      lessonTitle.textContent = lesson.title;
-      lessonPoints.innerHTML = lesson.points.map((point) => `<li>${point}</li>`).join("");
+      const currentSlide = getCurrentSlide();
+      const slideLabel = `${lesson.title} - Trang ${currentSlide.page}/${lesson.totalPages}`;
+      contentInput.value = getLessonQuizContext(lesson);
+      lessonTitle.textContent = currentSlide.title;
+      lessonPoints.innerHTML = currentSlide.points.map((point) => `<li>${point}</li>`).join("");
       const content = getContentText();
-      contentPreview.innerHTML = content
-        ? `<strong>Nội dung sẽ dùng để tạo quiz:</strong> ${excerpt(content)}`
-        : `<strong>Chưa có nội dung cụ thể.</strong> Dán hoặc nhập phần bạn muốn ôn để hệ thống tạo quiz sát hơn.`;
-      const sourceCards = lesson.sources.map(([name, desc]) => `
+      const sourceLabel = `${lesson.title} · ${lesson.totalPages} trang slide`;
+      selectedSourceText.textContent = `${sourceLabel} · tạo quiz cho cả bài · ${content.length.toLocaleString("vi-VN")} ký tự context đã sẵn sàng.`;
+      contentPreview.innerHTML = `
+        <strong>Nội dung sẽ dùng để tạo quiz:</strong> toàn bộ bài ${escapeHtml(lesson.title)}<br />
+        <span>Trang đang xem: ${escapeHtml(slideLabel)}.</span><br />
+        <span>${content.length.toLocaleString("vi-VN")} ký tự context đã sẵn sàng.</span>
+      `;
+      const sourceCards = currentSlide.sources.map(([name, desc]) => `
         <div class="source-item">
           <strong>${name}</strong>
           <span>${desc}</span>
         </div>
       `).join("");
+      const pdfSrc = `${window.location.origin}${lesson.pdf}#page=${currentSlide.page}&zoom=page-fit&toolbar=0&navpanes=0&scrollbar=0`;
 
       sourceList.innerHTML = `
         <div class="vlearn-frame" aria-label="Mô phỏng trang slide VLearn">
           <div class="vlearn-top">
-            <strong>Bài 2 · DAY02</strong>
-            <span>${lesson.slidePage || "Slide mock"}</span>
+            <strong>${escapeHtml(lesson.course)}</strong>
+            <span>Trang ${currentSlide.page}/${lesson.totalPages}</span>
           </div>
           <div class="vlearn-body">
-            <div class="vlearn-nav">
-              <div class="vlearn-nav-item active">Slide - GV Mai Anh</div>
-              <div class="vlearn-nav-item">Day 02 - AI Product Lab</div>
-              <div class="vlearn-nav-item">Phần 3: Problem Card</div>
-              <div class="vlearn-nav-item">Phần 7: Chọn Rule</div>
-            </div>
             <div class="slide-canvas">
-              <div class="slide-page">
-                <h3>Quick <span>Problem Card</span></h3>
-                <div class="slide-subtitle">Khung định hình bài toán</div>
-                <div class="quick-card-table">
-                  <div class="quick-row">
-                    <div class="quick-label">Bài toán <em>problem</em></div>
-                    <div>Vấn đề cụ thể cần giải quyết, không bao gồm giải pháp.</div>
-                  </div>
-                  <div class="quick-row">
-                    <div class="quick-label">Đối tượng ảnh hưởng <em>actor</em></div>
-                    <div>Cá nhân hoặc bộ phận chịu tác động trực tiếp từ vấn đề.</div>
-                  </div>
-                  <div class="quick-row">
-                    <div class="quick-label">Quy trình hiện tại <em>workflow</em></div>
-                    <div>Các bước vận hành thủ công hoặc tự động hiện tại, gồm 3-7 bước.</div>
-                  </div>
-                  <div class="quick-row">
-                    <div class="quick-label">Nút thắt & Tác động <em>impact</em></div>
-                    <div>Khâu gây chậm trễ, sai sót, lặp lại hoặc tổn thất cụ thể.</div>
-                  </div>
-                  <div class="quick-row">
-                    <div class="quick-label">Chỉ số đo thành công <em>metric</em></div>
-                    <div>Chỉ số định lượng cụ thể dùng để chứng minh hiệu quả cải tiến.</div>
-                  </div>
-                  <div class="quick-row">
-                    <div class="quick-label">Định hướng giải pháp <em>direction</em></div>
-                    <div>No AI / Rule / Workflow / Agent / Chưa xác định.</div>
-                  </div>
-                </div>
-                <div class="slide-footer">
-                  <span>PROBLEM STATEMENT · QUICK CARD</span>
-                  <span>DAY 02 · 28 / 76</span>
+              <div class="pdf-slide-shell">
+                <iframe
+                  class="pdf-slide"
+                  title="${escapeHtml(slideLabel)}"
+                  src="${escapeHtml(pdfSrc)}"
+                ></iframe>
+                <a class="pdf-open-link" href="${escapeHtml(`${lesson.pdf}#page=${currentSlide.page}`)}" target="_blank" rel="noreferrer">
+                  Mở slide PDF trong tab mới nếu trình duyệt không hiển thị tại đây
+                </a>
+                <div class="slide-context-card">
+                  <div class="slide-kicker">${escapeHtml(currentSlide.section)}</div>
+                  <h3>${escapeHtml(currentSlide.title)}</h3>
+                  <p>${escapeHtml(currentSlide.subtitle)}</p>
                 </div>
               </div>
             </div>
           </div>
+          <div class="slide-pager">
+            <button id="prev-slide-btn" class="pager-button" type="button" ${state.slideIndex === 0 ? "disabled" : ""}>‹ Trang trước</button>
+            <span>${escapeHtml(lesson.title)} · Trang ${currentSlide.page}/${lesson.totalPages}</span>
+            <button id="next-slide-btn" class="pager-button" type="button" ${state.slideIndex === lesson.totalPages - 1 ? "disabled" : ""}>Trang sau ›</button>
+          </div>
         </div>
         ${sourceCards}
       `;
+
+      document.getElementById("prev-slide-btn")?.addEventListener("click", () => {
+        if (state.slideIndex > 0) {
+          state.slideIndex -= 1;
+          renderLesson();
+          updateStepLocks();
+        }
+      });
+
+      document.getElementById("next-slide-btn")?.addEventListener("click", () => {
+        if (state.slideIndex < lesson.totalPages - 1) {
+          state.slideIndex += 1;
+          renderLesson();
+          updateStepLocks();
+        }
+      });
     }
 
     function showScreen(name) {
@@ -1970,8 +2466,8 @@
       setStep(name);
 
       if (name === "setup") {
-        screenTitle.textContent = "Tạo quiz từ một nội dung học";
-        screenSubtitle.textContent = "Học viên chọn một bài/lab trên VLearn, hệ thống gọi AI thật để tạo bộ 20 câu tự kiểm tra mức hiểu trước quiz.";
+        screenTitle.textContent = "Tạo quiz từ slide VLearn";
+        screenSubtitle.textContent = "Học viên chọn một slide/bài giảng đã học, hệ thống gọi AI thật để tạo 20 câu tự kiểm tra và chỉ rõ phần cần ôn lại.";
       } else if (name === "quiz") {
         screenTitle.textContent = "20 câu quiz ôn tập";
         screenSubtitle.textContent = "Bản CP3 gọi AI thật qua server local; nếu thiếu API key, hệ thống hiển thị fallback và ghi rõ trong trace.";
@@ -2065,14 +2561,25 @@
 
       const weakTopics = [...missedTopics.entries()]
         .sort((a, b) => b[1] - a[1])
-        .map(([topic, count]) => `<li>${topic}: sai ${count} câu</li>`)
+        .map(([topic, count]) => `
+          <li class="weak-topic">
+            <strong>${topic}</strong>
+            <span>Sai ${count} câu</span>
+          </li>
+        `)
         .join("");
-      document.getElementById("weak-topics").innerHTML = weakTopics || "<li>Không có chủ đề yếu trong lượt làm này.</li>";
+      document.getElementById("weak-topics").innerHTML = weakTopics || `
+        <li class="weak-topic">
+          <strong>Không có chủ đề yếu trong lượt làm này.</strong>
+          <span>0 câu sai</span>
+        </li>
+      `;
     }
 
     lessonSelect.addEventListener("change", (event) => {
       state.lessonKey = event.target.value;
-      contentInput.value = lessons[state.lessonKey].defaultContent;
+      state.slideIndex = 0;
+      contentInput.value = getLessonQuizContext(lessons[state.lessonKey]);
       state.quizGenerated = false;
       state.resultReady = false;
       renderLesson();
@@ -2104,12 +2611,13 @@
     });
 
     async function generateQuizWithAI() {
+      const lesson = lessons[state.lessonKey];
       const response = await fetch("/api/generate-quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          lessonTitle: lessons[state.lessonKey].title,
-          source: lessons[state.lessonKey].sources?.[0]?.[0] || "VLearn mock source",
+          lessonTitle: lesson.title,
+          source: `${lesson.pdf.replace("/data/vlearn-pack/slides/", "")} - ${lesson.totalPages} trang slide`,
           content: getContentText()
         })
       });
@@ -2123,7 +2631,6 @@
 
     document.getElementById("generate-btn").addEventListener("click", async () => {
       if (!getContentText()) {
-        contentInput.focus();
         return;
       }
       const generateBtn = document.getElementById("generate-btn");
@@ -2182,9 +2689,10 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    contentInput.value = lessons[state.lessonKey].defaultContent;
+    contentInput.value = getLessonQuizContext(lessons[state.lessonKey]);
     renderLesson();
     updateStepLocks();
   </script>
 </body>
+
 </html>

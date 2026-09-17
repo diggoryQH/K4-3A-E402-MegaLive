@@ -156,11 +156,26 @@ async function handleGenerateQuiz(req, res) {
 
 async function handleStatic(req, res) {
   const pathname = new URL(req.url, `http://localhost:${port}`).pathname;
-  const filePath = pathname === "/" ? join(__dirname, "index.html") : join(__dirname, pathname);
+  const dataPrefix = "/data/vlearn-pack/slides/";
+  const filePath = pathname === "/"
+    ? join(__dirname, "index.html")
+    : pathname.startsWith(dataPrefix)
+      ? resolve(repoRoot, `.${pathname}`)
+      : join(__dirname, pathname);
+
+  if (pathname.startsWith(dataPrefix) && !filePath.startsWith(resolve(repoRoot, "data", "vlearn-pack", "slides"))) {
+    res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Forbidden");
+    return;
+  }
 
   try {
     const file = await readFile(filePath);
-    const contentType = filePath.endsWith(".html") ? "text/html; charset=utf-8" : "text/plain; charset=utf-8";
+    const contentType = filePath.endsWith(".html")
+      ? "text/html; charset=utf-8"
+      : filePath.endsWith(".pdf")
+        ? "application/pdf"
+        : "text/plain; charset=utf-8";
     res.writeHead(200, { "Content-Type": contentType });
     res.end(file);
   } catch {
