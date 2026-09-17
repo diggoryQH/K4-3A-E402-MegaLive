@@ -1,0 +1,2190 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VLearn Quiz ôn tập - Prototype CP3</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #657286;
+      --line: #d7dde6;
+      --paper: #f7f9fc;
+      --panel: #ffffff;
+      --green: #18735f;
+      --green-soft: #dff3ed;
+      --blue: #265c9e;
+      --blue-soft: #e7f0fb;
+      --red: #a33a35;
+      --red-soft: #fde8e5;
+      --amber: #8a5a00;
+      --amber-soft: #fff3cf;
+      --shadow: 0 16px 40px rgba(30, 45, 70, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #152334;
+      color: #edf4fb;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 8px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #dff3ed;
+      color: #152334;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 0;
+      color: #aebdcd;
+      font-size: 14px;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      border: 0;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      font: inherit;
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      align-items: center;
+      gap: 10px;
+      color: #aebdcd;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .step.is-active {
+      color: #ffffff;
+    }
+
+    .step.is-active .step-number {
+      background: var(--green-soft);
+      color: #152334;
+      border-color: transparent;
+    }
+
+    .step.is-locked {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+
+    .step:focus-visible {
+      outline: 3px solid #8ab8ff;
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      color: #b8c6d7;
+      font-size: 13px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding-top: 16px;
+    }
+
+    .main {
+      padding: 28px;
+      display: grid;
+      gap: 20px;
+      align-content: start;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .status-pill {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--amber);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-inner {
+      padding: 22px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 18px;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .lesson-preview {
+      background: #fbfcff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .context-preview {
+      margin-top: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      color: var(--muted);
+    }
+
+    .context-preview strong {
+      color: var(--ink);
+    }
+
+    .lesson-preview h3,
+    .summary h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .lesson-preview ul,
+    .summary ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .source-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .vlearn-frame {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .vlearn-top {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      background: #fbfcff;
+    }
+
+    .vlearn-body {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      min-height: 360px;
+    }
+
+    .vlearn-nav {
+      border-right: 1px solid var(--line);
+      background: #eef4f8;
+      padding: 12px 8px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      font-size: 12px;
+    }
+
+    .vlearn-nav-item {
+      border-radius: 8px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #27415f;
+      font-weight: 700;
+    }
+
+    .vlearn-nav-item.active {
+      background: #dceeff;
+      box-shadow: inset 3px 0 0 var(--blue);
+    }
+
+    .slide-canvas {
+      padding: 18px;
+      background: #f9fbfe;
+      display: grid;
+      place-items: center;
+    }
+
+    .slide-page {
+      width: 100%;
+      max-width: 620px;
+      aspect-ratio: 16 / 10;
+      background: #fff;
+      border: 1px solid #e2e7ef;
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(35, 50, 70, 0.08);
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .slide-page h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .slide-page h3 span {
+      color: #168ca0;
+    }
+
+    .slide-subtitle {
+      margin: -6px 0 4px;
+      color: #168ca0;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .quick-card-table {
+      border-top: 2px solid #1f2937;
+      border-bottom: 2px solid #1f2937;
+      display: grid;
+    }
+
+    .quick-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 16px;
+      padding: 9px 6px;
+      border-bottom: 1px solid #e3e7ed;
+      font-size: 13px;
+    }
+
+    .quick-row:last-child {
+      border-bottom: 0;
+    }
+
+    .quick-label {
+      font-weight: 800;
+    }
+
+    .quick-label em {
+      color: #8c96a5;
+      font-weight: 600;
+      font-style: italic;
+      margin-left: 4px;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      color: #98a2b3;
+      font-size: 11px;
+      margin-top: auto;
+      letter-spacing: 0;
+    }
+
+    .source-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfcff;
+    }
+
+    .source-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .source-item span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 44px;
+      padding: 0 16px;
+      cursor: pointer;
+      font-weight: 800;
+      color: #fff;
+      background: var(--green);
+    }
+
+    .button.secondary {
+      background: #e9eef6;
+      color: var(--ink);
+    }
+
+    .button:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #8ab8ff;
+      outline-offset: 2px;
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .quiz-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 18px;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .question {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .question-head {
+      padding: 14px 16px;
+      background: #f5f8fc;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .question-index {
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .question-title {
+      margin: 0;
+      font-weight: 800;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+      padding: 14px 16px 16px;
+    }
+
+    .option {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: start;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #f7fbff;
+    }
+
+    .option input {
+      margin-top: 3px;
+    }
+
+    .side-panel {
+      position: sticky;
+      top: 18px;
+      align-self: start;
+      display: grid;
+      gap: 14px;
+    }
+
+    .progress-box,
+    .summary {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 16px;
+    }
+
+    .progress-number {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #e8edf4;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      transition: width 180ms ease;
+    }
+
+    .results {
+      display: grid;
+      gap: 18px;
+    }
+
+    .score-band {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .metric span {
+      color: var(--muted);
+    }
+
+    .review-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .review-item {
+      border: 1px solid var(--line);
+      border-left-width: 6px;
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .review-item.correct {
+      border-left-color: var(--green);
+    }
+
+    .review-item.wrong {
+      border-left-color: var(--red);
+    }
+
+    .review-item h4 {
+      margin: 0 0 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .tag.correct {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .tag.wrong {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .explain {
+      color: var(--muted);
+      margin: 8px 0;
+    }
+
+    .source {
+      background: var(--blue-soft);
+      color: #1d4f8d;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* VLearn-style layout pass */
+    body {
+      background: #f8fafc;
+    }
+
+    .app {
+      grid-template-columns: 372px minmax(0, 1fr);
+      min-height: 100vh;
+      background: #f8fafc;
+    }
+
+    .sidebar {
+      background: #edf5fb;
+      color: #243244;
+      padding: 0;
+      border-right: 1px solid #d8e2ec;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid #d8e2ec;
+      background: #ffffff;
+      grid-template-columns: 44px 1fr;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      background: #dff3ed;
+      color: #0f2b46;
+      border-radius: 12px;
+      grid-row: span 2;
+    }
+
+    .brand h1 {
+      font-size: 18px;
+      color: #1f2937;
+    }
+
+    .brand p {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .step-list {
+      padding: 18px;
+      border-bottom: 1px solid #d8e2ec;
+      background: #f4f9fd;
+    }
+
+    .step {
+      color: #334155;
+      padding: 12px;
+      border-radius: 12px;
+      grid-template-columns: 36px 1fr;
+      margin-bottom: 6px;
+    }
+
+    .step:hover:not(.is-locked) {
+      background: #ffffff;
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border-color: #9fc5e8;
+      background: #ffffff;
+      color: #27639e;
+    }
+
+    .step.is-active {
+      color: #123b67;
+      background: #dceeff;
+      box-shadow: inset 4px 0 0 #2e73b8;
+      font-weight: 800;
+    }
+
+    .step.is-active .step-number {
+      background: #ffffff;
+      color: #123b67;
+      border-color: #2e73b8;
+    }
+
+    .sidebar-note {
+      margin: 0;
+      color: #64748b;
+      border-top: 0;
+      padding: 18px;
+      background: #edf5fb;
+    }
+
+    .main {
+      padding: 0;
+      gap: 0;
+      background: #f8fafc;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e2e8f0;
+      min-height: 76px;
+      padding: 18px 28px;
+      align-items: center;
+    }
+
+    .topbar h2 {
+      font-size: 22px;
+      color: #1f2937;
+    }
+
+    .topbar p {
+      margin-top: 2px;
+      font-size: 14px;
+      color: #667085;
+      max-width: 900px;
+    }
+
+    .status-pill {
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(31, 41, 55, 0.06);
+    }
+
+    #setup-screen.panel {
+      margin: 22px 28px 28px;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #setup-screen .panel-inner {
+      padding: 0;
+    }
+
+    .content-grid {
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .field-grid {
+      position: sticky;
+      top: 100px;
+      background: #ffffff;
+      border: 1px solid #dce5ef;
+      border-radius: 14px;
+      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.07);
+      padding: 18px;
+    }
+
+    .field-grid label {
+      color: #243244;
+      font-size: 14px;
+    }
+
+    select,
+    textarea {
+      border-color: #d9e3ee;
+      border-radius: 12px;
+      background: #fbfdff;
+      font-weight: 650;
+    }
+
+    textarea {
+      min-height: 180px;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    .lesson-preview {
+      border-radius: 12px;
+      background: #f7fbff;
+      border-color: #dce5ef;
+    }
+
+    .source-list {
+      gap: 12px;
+    }
+
+    .vlearn-frame {
+      border-radius: 16px;
+      min-height: calc(100vh - 128px);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+      border-color: #dce5ef;
+    }
+
+    .vlearn-top {
+      height: 58px;
+      padding: 0 22px;
+      background: #ffffff;
+      font-size: 16px;
+    }
+
+    .vlearn-body {
+      grid-template-columns: 250px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .vlearn-nav {
+      background: #edf5fb;
+      padding: 18px 14px;
+      gap: 10px;
+      border-right-color: #d5e2ef;
+    }
+
+    .vlearn-nav::before {
+      content: "NỘI DUNG BÀI HỌC";
+      color: #111827;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0;
+      margin-bottom: 8px;
+    }
+
+    .vlearn-nav-item {
+      border-radius: 12px;
+      padding: 13px 12px;
+      background: #ffffff;
+      color: #123b67;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .vlearn-nav-item.active {
+      background: #dceeff;
+      box-shadow: inset 4px 0 0 #2e73b8;
+    }
+
+    .slide-canvas {
+      padding: 28px 34px;
+      background: #f8fafc;
+      align-items: start;
+    }
+
+    .slide-page {
+      max-width: 1160px;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      padding: clamp(28px, 3vw, 48px);
+      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+      gap: 18px;
+    }
+
+    .slide-page h3 {
+      font-size: clamp(30px, 3vw, 46px);
+    }
+
+    .slide-subtitle {
+      font-size: clamp(16px, 1.5vw, 22px);
+    }
+
+    .quick-row {
+      grid-template-columns: minmax(220px, 0.45fr) minmax(0, 1fr);
+      gap: 24px;
+      padding: 13px 8px;
+      font-size: clamp(14px, 1.1vw, 19px);
+    }
+
+    .source-item {
+      display: none;
+    }
+
+    #quiz-screen,
+    #result-screen {
+      padding: 22px 28px 32px;
+    }
+
+    .quiz-shell {
+      grid-template-columns: minmax(0, 1fr) 320px;
+    }
+
+    .question,
+    .progress-box,
+    .summary,
+    .metric,
+    .review-item,
+    #result-screen .panel {
+      border-radius: 14px;
+      border-color: #dce5ef;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+    }
+
+    .question-head {
+      background: #f7fbff;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .content-grid,
+      .quiz-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .side-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .main,
+      .sidebar {
+        padding: 18px;
+      }
+
+      .topbar {
+        display: grid;
+      }
+
+      .score-band {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* Final VLearn-style redesign */
+    .app {
+      grid-template-columns: 386px minmax(0, 1fr);
+      background: #ffffff;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 0;
+      gap: 0;
+      background: #edf6fb;
+      color: #111827;
+      border-right: 1px solid #d7e3ee;
+    }
+
+    .brand {
+      min-height: 96px;
+      padding: 22px 18px;
+      background: #ffffff;
+      border-bottom: 1px solid #dce6ef;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #dff5ef;
+      color: #07223d;
+      font-size: 18px;
+    }
+
+    .brand h1 {
+      color: #182230;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      color: #667085;
+      font-size: 14px;
+      max-width: 250px;
+    }
+
+    .brand::after {
+      content: "NỘI DUNG BÀI HỌC";
+      grid-column: 1 / -1;
+      margin-top: 14px;
+      color: #111827;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .step-list {
+      padding: 16px 14px 18px;
+      background: #edf6fb;
+      border-bottom: 1px solid #d7e3ee;
+    }
+
+    .step-list::before {
+      content: "Slides";
+      display: flex;
+      justify-content: space-between;
+      margin: 0 0 10px;
+      color: #111827;
+      font-size: 19px;
+      font-weight: 850;
+    }
+
+    .step-list::after {
+      content: "Slide - GV Mai Anh    Đang học\a 4-day02-lecture-slides-v2\a b2\a Day 02 _ AI Product Lab\a Day 02_C401_Xác Định Bài Toán\a Day 02_C401_AI Product Lab";
+      white-space: pre-line;
+      display: block;
+      margin-top: 14px;
+      padding-top: 10px;
+      color: #243244;
+      font-weight: 750;
+      line-height: 2.15;
+      border-top: 1px solid #d7e3ee;
+    }
+
+    .step {
+      min-height: 58px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: #7b8798;
+      grid-template-columns: 36px 1fr;
+      background: transparent;
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid #9cc4e8;
+      background: #ffffff;
+      color: #2868a5;
+    }
+
+    .step.is-active {
+      color: #113b66;
+      background: #dceeff;
+      box-shadow: inset 4px 0 0 #2e73b8;
+      font-weight: 900;
+    }
+
+    .step.is-locked {
+      opacity: 0.72;
+    }
+
+    .sidebar-note {
+      margin: 0;
+      padding: 20px 18px;
+      background: #e7f2fa;
+      color: #52667d;
+      border-top: 1px solid #d7e3ee;
+      font-size: 15px;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 0;
+      gap: 0;
+      background: #f8fafc;
+    }
+
+    .topbar {
+      min-height: 96px;
+      padding: 18px 36px;
+      background: #ffffff;
+      border-bottom: 1px solid #dde6ee;
+      align-items: center;
+      box-shadow: none;
+    }
+
+    .topbar h2 {
+      font-size: 27px;
+      color: #1f2937;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      margin-top: 2px;
+      color: #667085;
+      font-size: 15px;
+    }
+
+    .status-pill {
+      border-radius: 999px;
+      padding: 12px 18px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+      background: #ffffff;
+    }
+
+    #setup-screen.panel {
+      margin: 26px 36px 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #setup-screen .panel-inner {
+      padding: 0;
+    }
+
+    #setup-screen .content-grid {
+      grid-template-columns: minmax(620px, 1fr) 390px;
+      grid-template-areas: "slide controls";
+      gap: 22px;
+      align-items: start;
+    }
+
+    #setup-screen .source-list {
+      grid-area: slide;
+      min-width: 0;
+    }
+
+    #setup-screen .field-grid {
+      grid-area: controls;
+      position: sticky;
+      top: 116px;
+      padding: 18px;
+      gap: 14px;
+      background: #ffffff;
+      border: 1px solid #dce5ef;
+      border-radius: 14px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    #setup-screen .field-grid::before {
+      content: "Tạo quiz ôn tập";
+      color: #182230;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    #setup-screen .field-grid label {
+      color: #243244;
+      font-size: 14px;
+    }
+
+    #setup-screen select,
+    #setup-screen textarea {
+      border-radius: 12px;
+      border-color: #d9e3ee;
+      background: #fbfdff;
+      font-weight: 650;
+    }
+
+    #setup-screen textarea {
+      min-height: 168px;
+      max-height: 260px;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    #setup-screen .lesson-preview {
+      max-height: 280px;
+      overflow: auto;
+      border-radius: 12px;
+      background: #f7fbff;
+      border-color: #dce5ef;
+    }
+
+    #setup-screen .lesson-preview h3 {
+      font-size: 17px;
+    }
+
+    #setup-screen .lesson-preview ul {
+      color: #758397;
+      font-size: 14px;
+    }
+
+    #setup-screen .actions {
+      margin-top: 2px;
+    }
+
+    #setup-screen .button {
+      min-height: 48px;
+      border-radius: 12px;
+    }
+
+    .vlearn-frame {
+      min-height: calc(100vh - 148px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      border-radius: 14px;
+      border-color: #dce5ef;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+    }
+
+    .vlearn-frame::after {
+      content: "⌖   ✎   ◌   ◇   ?   T        ▣ Từng trang     ◫ Cuộn dọc     ⊖ 100% ⊕        ↶   Xóa   ↗                                  ‹   28 / 76   ›     ▦   Sổ ghi chú";
+      display: block;
+      padding: 10px 18px 12px;
+      color: #5f6b7a;
+      background: #ffffff;
+      border-top: 1px solid #e5ebf2;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vlearn-top {
+      height: 58px;
+      padding: 0 22px;
+      background: #ffffff;
+      font-size: 17px;
+    }
+
+    .vlearn-body {
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .vlearn-nav {
+      background: #edf6fb;
+      padding: 22px 14px;
+      gap: 10px;
+      border-right-color: #d7e3ee;
+    }
+
+    .vlearn-nav::before {
+      content: "NỘI DUNG BÀI HỌC";
+      color: #111827;
+      font-weight: 900;
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .vlearn-nav-item {
+      border-radius: 12px;
+      padding: 14px 12px;
+      background: #ffffff;
+      color: #123b67;
+      font-size: 15px;
+      line-height: 1.35;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+    }
+
+    .vlearn-nav-item.active {
+      background: #dceeff;
+      box-shadow: inset 4px 0 0 #2e73b8;
+    }
+
+    .slide-canvas {
+      padding: 34px 38px;
+      background: #f8fafc;
+      align-items: start;
+    }
+
+    .slide-page {
+      max-width: 1180px;
+      min-height: 640px;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      padding: clamp(32px, 4vw, 58px);
+      gap: 18px;
+      box-shadow: 0 14px 38px rgba(15, 23, 42, 0.07);
+    }
+
+    .slide-page h3 {
+      font-size: clamp(38px, 4vw, 58px);
+      line-height: 1.06;
+    }
+
+    .slide-subtitle {
+      font-size: clamp(18px, 1.7vw, 26px);
+    }
+
+    .quick-row {
+      grid-template-columns: minmax(260px, 0.48fr) minmax(0, 1fr);
+      gap: 34px;
+      padding: 13px 8px;
+      font-size: clamp(15px, 1.15vw, 20px);
+    }
+
+    .source-item {
+      display: none;
+    }
+
+    #quiz-screen,
+    #result-screen {
+      padding: 26px 36px 36px;
+    }
+
+    @media (max-width: 1220px) {
+      .app {
+        grid-template-columns: 320px minmax(0, 1fr);
+      }
+
+      #setup-screen .content-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "controls"
+          "slide";
+      }
+
+      #setup-screen .field-grid {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .brand::after,
+      .step-list::after,
+      .vlearn-nav {
+        display: none;
+      }
+
+      .topbar {
+        display: grid;
+        padding: 16px;
+      }
+
+      #setup-screen.panel,
+      #quiz-screen,
+      #result-screen {
+        margin: 16px;
+        padding: 0;
+      }
+
+      .vlearn-body {
+        grid-template-columns: 1fr;
+      }
+
+      .slide-page {
+        min-height: 520px;
+      }
+    }
+
+    /* Balance pass: keep the VLearn shape without crowding the slide */
+    .app {
+      grid-template-columns: 300px minmax(0, 1fr);
+    }
+
+    .brand {
+      min-height: 84px;
+      padding: 18px 16px;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+
+    .brand h1 {
+      font-size: 18px;
+    }
+
+    .brand p {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .brand::after {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .step-list {
+      padding: 14px 12px;
+    }
+
+    .step-list::before {
+      font-size: 18px;
+    }
+
+    .step-list::after {
+      display: none;
+    }
+
+    .step {
+      min-height: 50px;
+      padding: 8px 10px;
+      grid-template-columns: 32px 1fr;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      font-size: 13px;
+    }
+
+    .sidebar-note {
+      padding: 16px;
+      font-size: 13px;
+    }
+
+    .topbar {
+      min-height: 86px;
+      padding: 16px 28px;
+    }
+
+    .topbar h2 {
+      font-size: 25px;
+    }
+
+    .topbar p {
+      font-size: 14px;
+    }
+
+    #setup-screen.panel {
+      margin: 18px 28px 0;
+    }
+
+    #setup-screen .content-grid {
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 20px;
+    }
+
+    #setup-screen .field-grid {
+      top: 104px;
+      padding: 16px;
+      gap: 12px;
+    }
+
+    #setup-screen .field-grid::before {
+      font-size: 20px;
+    }
+
+    #setup-screen textarea {
+      min-height: 132px;
+      max-height: 190px;
+    }
+
+    #setup-screen .lesson-preview {
+      max-height: 170px;
+      padding: 14px;
+    }
+
+    #setup-screen .lesson-preview ul {
+      display: none;
+    }
+
+    #setup-screen .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    #setup-screen .button {
+      width: 100%;
+      min-height: 44px;
+    }
+
+    .vlearn-frame {
+      min-height: calc(100vh - 124px);
+      overflow: hidden;
+    }
+
+    .vlearn-top {
+      height: 52px;
+      padding: 0 18px;
+    }
+
+    .vlearn-body {
+      grid-template-columns: 210px minmax(0, 1fr);
+    }
+
+    .vlearn-nav {
+      padding: 18px 12px;
+    }
+
+    .vlearn-nav::before {
+      font-size: 13px;
+    }
+
+    .vlearn-nav-item {
+      padding: 11px 10px;
+      font-size: 13px;
+    }
+
+    .slide-canvas {
+      padding: 28px;
+      place-items: center;
+      align-items: center;
+      overflow: auto;
+    }
+
+    .slide-page {
+      width: min(100%, 980px);
+      min-height: min(620px, calc(100vh - 230px));
+      aspect-ratio: auto;
+      padding: clamp(24px, 2.4vw, 36px);
+      overflow: visible;
+      align-content: start;
+    }
+
+    .slide-page h3 {
+      font-size: clamp(32px, 2.8vw, 44px);
+      white-space: nowrap;
+    }
+
+    .slide-subtitle {
+      font-size: clamp(16px, 1.25vw, 20px);
+    }
+
+    .quick-row {
+      grid-template-columns: minmax(230px, 0.42fr) minmax(0, 1fr);
+      gap: 22px;
+      padding: 8px 6px;
+      font-size: clamp(13px, 0.92vw, 16px);
+      line-height: 1.35;
+    }
+
+    .quick-label {
+      min-width: 0;
+    }
+
+    .vlearn-frame::after {
+      padding: 9px 16px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1500px) {
+      .app {
+        grid-template-columns: 280px minmax(0, 1fr);
+      }
+
+      #setup-screen .content-grid {
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 18px;
+      }
+
+      .vlearn-body {
+        grid-template-columns: 190px minmax(0, 1fr);
+      }
+
+      .slide-canvas {
+        padding: 20px;
+      }
+
+      .slide-page h3 {
+        font-size: clamp(28px, 2.7vw, 38px);
+      }
+
+      .quick-row {
+        grid-template-columns: minmax(190px, 0.42fr) minmax(0, 1fr);
+        gap: 16px;
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      #setup-screen .content-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "controls"
+          "slide";
+      }
+
+      #setup-screen .field-grid {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">VL</div>
+        <h1>Quiz ôn tập VLearn</h1>
+    
+      </div>
+
+      <div class="step-list" aria-label="Tiến trình">
+        <button class="step is-active" data-step="setup" type="button">
+          <div class="step-number">1</div>
+          <div>Chọn nội dung</div>
+        </button>
+        <button class="step is-locked" data-step="quiz" type="button" aria-disabled="true">
+          <div class="step-number">2</div>
+          <div>Làm 20 câu quiz</div>
+        </button>
+        <button class="step is-locked" data-step="result" type="button" aria-disabled="true">
+          <div class="step-number">3</div>
+          <div>Xem kết quả</div>
+        </button>
+      </div>
+
+      <div class="sidebar-note">
+        AI trong bản thật sẽ đọc nội dung lab/slide, chọn trọng tâm, tạo câu hỏi, đáp án, giải thích và nguồn đọc lại.
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h2 id="screen-title">Tạo quiz từ một nội dung học</h2>
+          <p id="screen-subtitle">Học viên chọn một bài/lab trên VLearn, hệ thống tạo bộ 20 câu để tự kiểm tra mức hiểu trước quiz.</p>
+        </div>
+        <div class="status-pill" id="ai-status">
+          <span class="dot" aria-hidden="true"></span>
+          AI thật khi chạy qua server
+        </div>
+      </div>
+
+      <section id="setup-screen" class="panel">
+        <div class="panel-inner content-grid">
+          <div class="field-grid">
+            <label>
+              Chọn bài/lab mẫu
+              <select id="lesson-select">
+                <option value="product">Bài 2 DAY02 - Quick Problem Card</option>
+                <option value="eval">Day 06 - Đánh giá prototype AI bằng golden set</option>
+                <option value="prompt">Lab - Viết prompt có ràng buộc nguồn</option>
+              </select>
+            </label>
+
+            <label>
+              Nội dung cụ thể cần ôn tập
+              <textarea id="content-input" placeholder="Dán đoạn lab, ý chính của slide hoặc nội dung bạn muốn hệ thống tạo quiz..."></textarea>
+            </label>
+
+            <div class="lesson-preview">
+              <h3 id="lesson-title">Day 05 - Xác định bài toán AI Product</h3>
+              <ul id="lesson-points"></ul>
+              <div class="context-preview" id="content-preview"></div>
+            </div>
+
+            <div class="actions">
+              <button id="generate-btn" class="button" type="button">Tạo 20 câu quiz bằng AI</button>
+            </div>
+          </div>
+
+          <aside class="source-list" id="source-list" aria-label="Nguồn mock"></aside>
+        </div>
+      </section>
+
+      <section id="quiz-screen" class="quiz-shell hidden">
+        <div class="question-list" id="question-list"></div>
+        <aside class="side-panel">
+          <div class="progress-box">
+            <div class="progress-number"><span id="answered-count">0</span>/20</div>
+            <div>câu đã trả lời</div>
+            <div class="progress-bar" aria-hidden="true">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+          <div class="summary">
+            <h3>Luồng CP3</h3>
+            <div class="context-preview" id="selected-context"></div>
+            <div class="context-preview" id="ai-trace"></div>
+            <ul>
+              <li>Chọn nội dung.</li>
+              <li>Gọi AI thật để tạo 20 câu quiz.</li>
+              <li>Làm bài và nộp.</li>
+              <li>Xem giải thích và nguồn đọc lại.</li>
+            </ul>
+          </div>
+          <button id="submit-btn" class="button" type="button" disabled>Nộp bài</button>
+          <button id="back-setup-btn" class="button secondary" type="button">Đổi nội dung</button>
+        </aside>
+      </section>
+
+      <section id="result-screen" class="results hidden">
+        <div class="score-band">
+          <div class="metric">
+            <strong id="score-value">0/20</strong>
+            <span>Số câu đúng</span>
+          </div>
+          <div class="metric">
+            <strong id="score-percent">0%</strong>
+            <span>Tỷ lệ hoàn thành</span>
+          </div>
+          <div class="metric">
+            <strong id="weak-count">0</strong>
+            <span>chủ đề cần ôn lại</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-inner">
+            <h3>Phần nên đọc lại</h3>
+            <ul id="weak-topics"></ul>
+            <div class="actions">
+              <button id="retry-btn" class="button" type="button">Làm lại quiz</button>
+              <button id="new-lesson-btn" class="button secondary" type="button">Chọn nội dung khác</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-list" id="review-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const lessons = {
+      product: {
+        title: "Bài 2 DAY02 - Quick Problem Card",
+        slidePage: "Slide 28/76",
+        defaultContent: "Quick Problem Card gồm 6 ô: Bài toán là vấn đề cụ thể cần giải quyết, không bao gồm giải pháp. Đối tượng ảnh hưởng là cá nhân hoặc bộ phận chịu tác động trực tiếp. Quy trình hiện tại là các bước vận hành hiện có. Nút thắt và tác động là khâu gây chậm trễ, sai sót hoặc lặp lại. Chỉ số đo thành công là chỉ số định lượng chứng minh hiệu quả cải tiến. Định hướng giải pháp có thể là No AI, Rule, Workflow, Agent hoặc chưa xác định.",
+        points: [
+          "Bài toán phải là một câu problem, không bao gồm giải pháp.",
+          "Đối tượng ảnh hưởng là người hoặc bộ phận chịu tác động trực tiếp.",
+          "Quy trình hiện tại cần mô tả 3-7 bước đang diễn ra.",
+          "Nút thắt và tác động chỉ ra chỗ chậm trễ, sai sót, lặp lại hoặc tổn thất.",
+          "Chỉ số đo thành công phải định lượng được hiệu quả cải tiến.",
+          "Định hướng giải pháp có thể là No AI, Rule, Workflow, Agent hoặc chưa xác định."
+        ],
+        sources: [
+          ["VLearn - Bài 2 DAY02", "Slide 28/76: Quick Problem Card."],
+          ["Ô Bài toán", "Vấn đề cụ thể cần giải quyết, không bao gồm giải pháp."],
+          ["Ô Nút thắt & Tác động", "Khâu gây chậm trễ, sai sót, lặp lại hoặc tổn thất cụ thể."]
+        ]
+      },
+      eval: {
+        title: "Day 06 - Đánh giá prototype AI bằng golden set",
+        defaultContent: "Nội dung cần ôn: golden set tối thiểu 20 case, quality bar chốt trước khi đo, cách ghi nhận kết quả pass/fail và phân tích failure sau mỗi lượt chạy.",
+        points: [
+          "Golden set cần có ít nhất 20 case.",
+          "Quality bar phải chốt trước khi nhìn kết quả.",
+          "Kết quả xấu vẫn có giá trị nếu ghi nhận trung thực.",
+          "Mỗi case cần định nghĩa pass/fail kiểm chứng được."
+        ],
+        sources: [
+          ["Guide, mục 2.6", "Định nghĩa tốt, golden set và quality bar."],
+          ["Guide, mục 4.1", "Chạy trọn bộ test, ghi đủ case fail."],
+          ["Rubric R4", "Kiểm thử chiếm 15 điểm trong bài nộp."]
+        ]
+      },
+      prompt: {
+        title: "Lab - Viết prompt có ràng buộc nguồn",
+        defaultContent: "Nội dung cần ôn: prompt chỉ dùng tài liệu được cấp, không bịa khi thiếu căn cứ, câu trả lời cần nguồn để kiểm chứng và dữ liệu người dùng không phải chỉ thị hệ thống.",
+        points: [
+          "Prompt cần nêu rõ hệ thống chỉ dùng tài liệu được cấp.",
+          "Nếu không đủ căn cứ, hệ thống cần hỏi lại hoặc từ chối.",
+          "Câu trả lời học tập nên có nguồn để người học kiểm chứng.",
+          "Không để nội dung người dùng nhập trở thành chỉ thị hệ thống."
+        ],
+        sources: [
+          ["Data README", "Nội dung học viên nhập là dữ liệu, không phải chỉ thị."],
+          ["HAX G10", "Thu hẹp phạm vi khi nghi ngờ."],
+          ["PAIR Trust", "Tin đúng mức quan trọng hơn tin tối đa."]
+        ]
+      }
+    };
+
+    const fallbackQuizBank = [
+      ["Theo slide, ô 'Bài toán' dùng để ghi gì?", ["Vấn đề cụ thể cần giải quyết, không bao gồm giải pháp", "Danh sách công nghệ sẽ dùng", "Tên nhóm và người phụ trách", "Kế hoạch demo cuối buổi"], 0, "Slide định nghĩa Bài toán là vấn đề cụ thể cần giải quyết và không bao gồm giải pháp.", "VLearn Bài 2 DAY02, slide 28/76", "Bài toán"],
+      ["Vì sao problem không nên chứa sẵn giải pháp?", ["Vì làm vậy khiến nhóm bỏ qua việc hiểu pain thật", "Vì giải pháp luôn sai", "Vì không được dùng công nghệ", "Vì problem card chỉ dành cho thiết kế UI"], 0, "Nếu problem đã gài giải pháp, nhóm dễ nhảy vào xây tính năng trước khi chứng minh pain.", "Ô Bài toán, Quick Problem Card", "Bài toán"],
+      ["Ô 'Đối tượng ảnh hưởng' mô tả ai?", ["Cá nhân hoặc bộ phận chịu tác động trực tiếp từ vấn đề", "Người viết code chính", "Người chấm bài", "Tất cả người dùng Internet"], 0, "Actor là người hoặc bộ phận bị tác động trực tiếp bởi vấn đề.", "Ô Đối tượng ảnh hưởng, slide 28/76", "Đối tượng ảnh hưởng"],
+      ["Trong đề tài quiz ôn tập, đối tượng ảnh hưởng phù hợp nhất là ai?", ["Học viên vừa học xong bài/lab và cần ôn trước quiz", "Người quản trị server", "Nhà tuyển dụng", "Người xem slide ngẫu nhiên"], 0, "Pain point của nhóm nằm ở học viên cần tự kiểm tra mức hiểu sau khi học.", "Áp dụng ô Đối tượng ảnh hưởng", "Đối tượng ảnh hưởng"],
+      ["Ô 'Quy trình hiện tại' nên mô tả điều gì?", ["Các bước vận hành hiện có, thủ công hoặc tự động, gồm 3-7 bước", "Một câu slogan sản phẩm", "Danh sách thành viên", "Tổng điểm dự kiến"], 0, "Slide nêu workflow là các bước vận hành hiện tại, thường gồm 3-7 bước.", "Ô Quy trình hiện tại, slide 28/76", "Quy trình hiện tại"],
+      ["Ví dụ nào giống 'quy trình hiện tại' của học viên đang ôn bài?", ["Mở VLearn, đọc lại slide, tìm phần trọng tâm, hỏi AI/bạn, tự kiểm tra", "Chọn màu nút, đặt tên logo, mua domain", "Nộp CP5, pitching, nhận giải", "Cài thư viện, tạo database, deploy"], 0, "Đây là chuỗi việc học viên đang làm trước khi có tính năng quiz ôn tập.", "Áp dụng ô Quy trình hiện tại", "Quy trình hiện tại"],
+      ["Ô 'Nút thắt & Tác động' cần chỉ ra điều gì?", ["Khâu gây chậm trễ, sai sót, lặp lại hoặc tổn thất cụ thể", "Nút bấm đẹp nhất trên giao diện", "Tên framework frontend", "Mốc thời gian nộp bài"], 0, "Slide định nghĩa bottleneck & impact là nơi gây chậm trễ, sai sót, lặp lại hoặc tổn thất.", "Ô Nút thắt & Tác động, slide 28/76", "Nút thắt & Tác động"],
+      ["Với nhóm quiz ôn tập, nút thắt nào bám sát khảo sát nhất?", ["Học viên mất nhiều thời gian ôn mà vẫn không biết mình thiếu gì", "Học viên không thích màu nền", "Học viên không có repo GitHub", "Học viên không có micro"], 0, "Khảo sát của nhóm cho thấy nhiều bạn mất thời gian ôn và không rõ mình thiếu phần nào.", "Khảo sát nhóm, n=21", "Nút thắt & Tác động"],
+      ["Ô 'Chỉ số đo thành công' cần có tính chất gì?", ["Định lượng được để chứng minh hiệu quả cải tiến", "Càng cảm tính càng tốt", "Chỉ là lời khen", "Không cần đo"], 0, "Success metric phải là chỉ số định lượng cụ thể.", "Ô Chỉ số đo thành công, slide 28/76", "Chỉ số đo thành công"],
+      ["Metric nào phù hợp để đo prototype quiz ôn tập?", ["Tỷ lệ học viên biết phần cần ôn lại sau khi làm quiz", "Số màu dùng trong giao diện", "Số thành viên biết thuyết trình", "Tên nhóm dài hay ngắn"], 0, "Metric này đo đúng mục tiêu giúp học viên nhận ra lỗ hổng kiến thức.", "Áp dụng ô Chỉ số đo thành công", "Chỉ số đo thành công"],
+      ["Theo slide, 'Định hướng giải pháp' có thể gồm lựa chọn nào?", ["No AI / Rule / Workflow / Agent / Chưa xác định", "React / Vue / Angular / Svelte", "Đỏ / xanh / vàng / tím", "CP1 / CP2 / CP3 / CP4"], 0, "Slide liệt kê các hướng No AI, Rule, Workflow, Agent hoặc chưa xác định.", "Ô Định hướng giải pháp, slide 28/76", "Định hướng giải pháp"],
+      ["Với tính năng sinh quiz từ slide, hướng giải pháp hợp lý nhất trong prototype là gì?", ["Workflow có AI hỗ trợ tạo quiz và giải thích", "No AI hoàn toàn", "Chỉ đổi màu slide", "Xóa phần ôn tập"], 0, "Tính năng cần một luồng tạo quiz từ nội dung học, sau này có AI hỗ trợ tạo câu hỏi.", "Áp dụng ô Định hướng giải pháp", "Định hướng giải pháp"],
+      ["Câu nào là problem statement tốt hơn?", ["Học viên không biết bắt đầu ôn slide từ đâu sau bài học", "Làm một app quiz thật đẹp", "Dùng AI tạo quiz bằng React", "Thêm nút màu xanh vào VLearn"], 0, "Câu này mô tả vấn đề của học viên, chưa nhảy sang giải pháp.", "Ô Bài toán, slide 28/76", "Bài toán"],
+      ["Câu nào là ví dụ 'giải pháp', chưa phải problem?", ["Tạo nút sinh 20 câu quiz bằng AI", "Học viên mất thời gian tìm phần trọng tâm", "Học viên không rõ mình thiếu gì", "Học viên đọc slide nhưng chưa tự kiểm tra được"], 0, "Tạo nút sinh quiz là hướng giải pháp, còn problem cần nói pain trước.", "Ô Bài toán, slide 28/76", "Bài toán"],
+      ["Tại sao prototype cần chỉ ra nguồn đọc lại sau mỗi câu sai?", ["Để học viên quay lại đúng phần bài giảng thay vì ôn tràn lan", "Để trang kết quả dài hơn", "Để thay thế giảng viên", "Để không cần làm quiz"], 0, "Pain của nhóm là học viên không biết ôn từ đâu; nguồn đọc lại giúp thu hẹp việc ôn.", "Áp dụng Nút thắt & Tác động", "Nút thắt & Tác động"],
+      ["Nếu quiz tạo từ slide Quick Problem Card, câu hỏi nên tập trung vào gì?", ["Các ô trong problem card và cách áp dụng chúng", "Thông tin ngoài khóa học", "Tên trình duyệt đang dùng", "Lịch sử tải file của người học"], 0, "Quiz phải bám nội dung slide đang mở để người học ôn đúng trọng tâm.", "VLearn Bài 2 DAY02, slide 28/76", "Nguồn nội dung"],
+      ["Dấu hiệu nào cho thấy học viên đang gặp pain thật?", ["Có số liệu khảo sát và quote như 'Không rõ mình thiếu gì'", "Nhóm thấy ý tưởng hay", "Tên tính năng nghe hiện đại", "Giao diện có nhiều hiệu ứng"], 0, "Evidence cần đến từ khảo sát/mining hoặc quote thật, không chỉ cảm giác của nhóm.", "Khảo sát nhóm, n=21", "Bằng chứng"],
+      ["Từ slide Quick Problem Card, ô nào giúp nhóm tránh làm sản phẩm quá rộng?", ["Bài toán và Quy trình hiện tại", "Màu sắc và font chữ", "Logo và tên nhóm", "Bookmark trình duyệt"], 0, "Hai ô này ép nhóm xác định vấn đề cụ thể và workflow đang xảy ra.", "Quick Problem Card", "Phạm vi"],
+      ["Khi demo CP2, điều quan trọng nhất cần chứng minh là gì?", ["Luồng từ slide bài giảng đến bộ quiz và kết quả ôn lại", "AI đã chạy thật", "Đã có backend production", "Đã có thanh toán"], 0, "CP2 cần cho thấy flow hoạt động; AI thật là yêu cầu của CP3.", "README, CP2", "CP2"],
+      ["Kết quả cuối của flow quiz nên giúp học viên trả lời câu hỏi nào?", ["Mình đang yếu phần nào và nên đọc lại đâu?", "Nhóm mình được bao nhiêu giải?", "Slide này dùng font gì?", "Server đang chạy port nào?"], 0, "Kết quả phải quay về pain point: học viên không rõ mình thiếu gì và ôn từ đâu.", "Pain point nhóm", "Kết quả học tập"]
+    ];
+
+    let quizBank = [...fallbackQuizBank];
+
+    const state = {
+      lessonKey: "product",
+      answers: {},
+      quizGenerated: false,
+      resultReady: false,
+      selectedContent: ""
+    };
+
+    const setupScreen = document.getElementById("setup-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const lessonSelect = document.getElementById("lesson-select");
+    const contentInput = document.getElementById("content-input");
+    const contentPreview = document.getElementById("content-preview");
+    const selectedContext = document.getElementById("selected-context");
+    const lessonTitle = document.getElementById("lesson-title");
+    const lessonPoints = document.getElementById("lesson-points");
+    const sourceList = document.getElementById("source-list");
+    const questionList = document.getElementById("question-list");
+    const answeredCount = document.getElementById("answered-count");
+    const progressFill = document.getElementById("progress-fill");
+    const submitBtn = document.getElementById("submit-btn");
+    const screenTitle = document.getElementById("screen-title");
+    const screenSubtitle = document.getElementById("screen-subtitle");
+
+    function setStep(step) {
+      document.querySelectorAll(".step").forEach((item) => {
+        item.classList.toggle("is-active", item.dataset.step === step);
+      });
+      updateStepLocks();
+    }
+
+    function updateStepLocks() {
+      document.querySelectorAll(".step").forEach((item) => {
+        const target = item.dataset.step;
+        const locked = (target === "quiz" && !state.quizGenerated) || (target === "result" && !state.resultReady);
+        item.classList.toggle("is-locked", locked);
+        item.setAttribute("aria-disabled", locked ? "true" : "false");
+      });
+    }
+
+    function getContentText() {
+      return contentInput.value.trim();
+    }
+
+    function excerpt(text, maxLength = 260) {
+      if (!text) return "";
+      return text.length > maxLength ? `${text.slice(0, maxLength).trim()}...` : text;
+    }
+
+    function renderLesson() {
+      const lesson = lessons[state.lessonKey];
+      lessonTitle.textContent = lesson.title;
+      lessonPoints.innerHTML = lesson.points.map((point) => `<li>${point}</li>`).join("");
+      const content = getContentText();
+      contentPreview.innerHTML = content
+        ? `<strong>Nội dung sẽ dùng để tạo quiz:</strong> ${excerpt(content)}`
+        : `<strong>Chưa có nội dung cụ thể.</strong> Dán hoặc nhập phần bạn muốn ôn để hệ thống tạo quiz sát hơn.`;
+      const sourceCards = lesson.sources.map(([name, desc]) => `
+        <div class="source-item">
+          <strong>${name}</strong>
+          <span>${desc}</span>
+        </div>
+      `).join("");
+
+      sourceList.innerHTML = `
+        <div class="vlearn-frame" aria-label="Mô phỏng trang slide VLearn">
+          <div class="vlearn-top">
+            <strong>Bài 2 · DAY02</strong>
+            <span>${lesson.slidePage || "Slide mock"}</span>
+          </div>
+          <div class="vlearn-body">
+            <div class="vlearn-nav">
+              <div class="vlearn-nav-item active">Slide - GV Mai Anh</div>
+              <div class="vlearn-nav-item">Day 02 - AI Product Lab</div>
+              <div class="vlearn-nav-item">Phần 3: Problem Card</div>
+              <div class="vlearn-nav-item">Phần 7: Chọn Rule</div>
+            </div>
+            <div class="slide-canvas">
+              <div class="slide-page">
+                <h3>Quick <span>Problem Card</span></h3>
+                <div class="slide-subtitle">Khung định hình bài toán</div>
+                <div class="quick-card-table">
+                  <div class="quick-row">
+                    <div class="quick-label">Bài toán <em>problem</em></div>
+                    <div>Vấn đề cụ thể cần giải quyết, không bao gồm giải pháp.</div>
+                  </div>
+                  <div class="quick-row">
+                    <div class="quick-label">Đối tượng ảnh hưởng <em>actor</em></div>
+                    <div>Cá nhân hoặc bộ phận chịu tác động trực tiếp từ vấn đề.</div>
+                  </div>
+                  <div class="quick-row">
+                    <div class="quick-label">Quy trình hiện tại <em>workflow</em></div>
+                    <div>Các bước vận hành thủ công hoặc tự động hiện tại, gồm 3-7 bước.</div>
+                  </div>
+                  <div class="quick-row">
+                    <div class="quick-label">Nút thắt & Tác động <em>impact</em></div>
+                    <div>Khâu gây chậm trễ, sai sót, lặp lại hoặc tổn thất cụ thể.</div>
+                  </div>
+                  <div class="quick-row">
+                    <div class="quick-label">Chỉ số đo thành công <em>metric</em></div>
+                    <div>Chỉ số định lượng cụ thể dùng để chứng minh hiệu quả cải tiến.</div>
+                  </div>
+                  <div class="quick-row">
+                    <div class="quick-label">Định hướng giải pháp <em>direction</em></div>
+                    <div>No AI / Rule / Workflow / Agent / Chưa xác định.</div>
+                  </div>
+                </div>
+                <div class="slide-footer">
+                  <span>PROBLEM STATEMENT · QUICK CARD</span>
+                  <span>DAY 02 · 28 / 76</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        ${sourceCards}
+      `;
+    }
+
+    function showScreen(name) {
+      setupScreen.classList.toggle("hidden", name !== "setup");
+      quizScreen.classList.toggle("hidden", name !== "quiz");
+      resultScreen.classList.toggle("hidden", name !== "result");
+      setStep(name);
+
+      if (name === "setup") {
+        screenTitle.textContent = "Tạo quiz từ một nội dung học";
+        screenSubtitle.textContent = "Học viên chọn một bài/lab trên VLearn, hệ thống gọi AI thật để tạo bộ 20 câu tự kiểm tra mức hiểu trước quiz.";
+      } else if (name === "quiz") {
+        screenTitle.textContent = "20 câu quiz ôn tập";
+        screenSubtitle.textContent = "Bản CP3 gọi AI thật qua server local; nếu thiếu API key, hệ thống hiển thị fallback và ghi rõ trong trace.";
+      } else {
+        screenTitle.textContent = "Kết quả và phần cần ôn lại";
+        screenSubtitle.textContent = "Học viên xem câu đúng/sai, giải thích và nguồn để quay lại đúng phần nội dung.";
+      }
+    }
+
+    function renderQuiz() {
+      state.answers = {};
+      state.resultReady = false;
+      state.selectedContent = getContentText();
+      const aiTraceElement = document.getElementById("ai-trace");
+      if (aiTraceElement) {
+        aiTraceElement.innerHTML = state.aiTrace
+          ? `<strong>AI trace:</strong> ${state.aiTrace}`
+          : `<strong>AI trace:</strong> Chưa có trace cho lượt này.`;
+      }
+      selectedContext.innerHTML = `<strong>Nội dung đang dùng:</strong> ${excerpt(state.selectedContent, 180)}`;
+      questionList.innerHTML = quizBank.map((q, index) => {
+        const [question, options] = q;
+        const optionsHtml = options.map((option, optionIndex) => `
+          <label class="option">
+            <input type="radio" name="q${index}" value="${optionIndex}" />
+            <span>${option}</span>
+          </label>
+        `).join("");
+
+        return `
+          <article class="question">
+            <div class="question-head">
+              <div class="question-index">${index + 1}</div>
+              <p class="question-title">${question}</p>
+            </div>
+            <div class="options">${optionsHtml}</div>
+          </article>
+        `;
+      }).join("");
+
+      questionList.querySelectorAll("input[type='radio']").forEach((input) => {
+        input.addEventListener("change", (event) => {
+          const questionIndex = Number(event.target.name.replace("q", ""));
+          state.answers[questionIndex] = Number(event.target.value);
+          updateProgress();
+        });
+      });
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const answered = Object.keys(state.answers).length;
+      answeredCount.textContent = answered;
+      progressFill.style.width = `${answered * 5}%`;
+      submitBtn.disabled = answered < quizBank.length;
+    }
+
+    function renderResults() {
+      let correct = 0;
+      const missedTopics = new Map();
+
+      const reviewHtml = quizBank.map((q, index) => {
+        const [question, options, answer, explanation, source, topic] = q;
+        const chosen = state.answers[index];
+        const isCorrect = chosen === answer;
+
+        if (isCorrect) {
+          correct += 1;
+        } else {
+          missedTopics.set(topic, (missedTopics.get(topic) || 0) + 1);
+        }
+
+        return `
+          <article class="review-item ${isCorrect ? "correct" : "wrong"}">
+            <span class="tag ${isCorrect ? "correct" : "wrong"}">${isCorrect ? "Đúng" : "Cần ôn lại"}</span>
+            <h4>Câu ${index + 1}: ${question}</h4>
+            <div>Bạn chọn: <strong>${options[chosen]}</strong></div>
+            <div>Đáp án đúng: <strong>${options[answer]}</strong></div>
+            <p class="explain">${explanation}</p>
+            <span class="source">Nguồn: ${source}</span>
+          </article>
+        `;
+      }).join("");
+
+      const percent = Math.round((correct / quizBank.length) * 100);
+      document.getElementById("score-value").textContent = `${correct}/20`;
+      document.getElementById("score-percent").textContent = `${percent}%`;
+      document.getElementById("weak-count").textContent = missedTopics.size;
+      document.getElementById("review-list").innerHTML = reviewHtml;
+
+      const weakTopics = [...missedTopics.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .map(([topic, count]) => `<li>${topic}: sai ${count} câu</li>`)
+        .join("");
+      document.getElementById("weak-topics").innerHTML = weakTopics || "<li>Không có chủ đề yếu trong lượt làm này.</li>";
+    }
+
+    lessonSelect.addEventListener("change", (event) => {
+      state.lessonKey = event.target.value;
+      contentInput.value = lessons[state.lessonKey].defaultContent;
+      state.quizGenerated = false;
+      state.resultReady = false;
+      renderLesson();
+      updateStepLocks();
+    });
+
+    contentInput.addEventListener("input", () => {
+      state.quizGenerated = false;
+      state.resultReady = false;
+      renderLesson();
+      updateStepLocks();
+    });
+
+    document.querySelectorAll(".step").forEach((stepButton) => {
+      stepButton.addEventListener("click", () => {
+        const target = stepButton.dataset.step;
+        if (target === "quiz" && !state.quizGenerated) {
+          showScreen("setup");
+          contentInput.focus();
+          return;
+        }
+        if (target === "result" && !state.resultReady) {
+          showScreen(state.quizGenerated ? "quiz" : "setup");
+          return;
+        }
+        showScreen(target);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+
+    async function generateQuizWithAI() {
+      const response = await fetch("/api/generate-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lessonTitle: lessons[state.lessonKey].title,
+          source: lessons[state.lessonKey].sources?.[0]?.[0] || "VLearn mock source",
+          content: getContentText()
+        })
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "AI server không trả về kết quả hợp lệ.");
+      }
+      return payload;
+    }
+
+    document.getElementById("generate-btn").addEventListener("click", async () => {
+      if (!getContentText()) {
+        contentInput.focus();
+        return;
+      }
+      const generateBtn = document.getElementById("generate-btn");
+      const status = document.getElementById("ai-status");
+      generateBtn.disabled = true;
+      generateBtn.textContent = "Đang gọi AI...";
+      status.innerHTML = `<span class="dot" aria-hidden="true"></span> Đang gọi AI`;
+      try {
+        const payload = await generateQuizWithAI();
+        quizBank = payload.questions.map((item) => [
+          item.question,
+          item.options,
+          item.answerIndex,
+          item.explanation,
+          item.source,
+          item.topic
+        ]);
+        state.aiTrace = `${payload.provider || "AI"} - ${payload.model || "model"} - trace ${payload.traceId || "local"} - ${quizBank.length} câu`;
+        status.innerHTML = `<span class="dot" aria-hidden="true"></span> AI thật`;
+      } catch (error) {
+        quizBank = [...fallbackQuizBank];
+        state.aiTrace = `Fallback mock: ${error.message}. Khi quay CP3, chạy bằng node codebase/server.mjs với OPENAI_API_KEY để có AI thật.`;
+        status.innerHTML = `<span class="dot" aria-hidden="true"></span> Fallback mock`;
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = "Tạo 20 câu quiz bằng AI";
+      }
+      state.quizGenerated = true;
+      state.resultReady = false;
+      renderQuiz();
+      showScreen("quiz");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    submitBtn.addEventListener("click", () => {
+      state.resultReady = true;
+      renderResults();
+      showScreen("result");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("back-setup-btn").addEventListener("click", () => {
+      showScreen("setup");
+    });
+
+    document.getElementById("retry-btn").addEventListener("click", () => {
+      state.quizGenerated = true;
+      state.resultReady = false;
+      renderQuiz();
+      showScreen("quiz");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("new-lesson-btn").addEventListener("click", () => {
+      showScreen("setup");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    contentInput.value = lessons[state.lessonKey].defaultContent;
+    renderLesson();
+    updateStepLocks();
+  </script>
+</body>
+</html>
