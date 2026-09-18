@@ -1,5 +1,5 @@
+import { appendFile, readFile } from "node:fs/promises";
 import { createServer } from "node:http";
-import { readFile, appendFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -29,6 +29,7 @@ await loadEnvFile();
 
 const port = Number(process.env.PORT || 4173);
 const model = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+const minimumContentChars = 120;
 
 function sendJson(res, status, payload) {
   res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
@@ -48,6 +49,11 @@ function readBody(req) {
     req.on("end", () => resolveBody(body));
     req.on("error", reject);
   });
+}
+
+function hasEnoughContent(content) {
+  const words = content.match(/[\p{L}\p{N}]+/gu) || [];
+  return content.length >= minimumContentChars && words.length >= 24;
 }
 
 function normalizeQuestions(rawQuestions, fallbackSource) {
@@ -129,8 +135,10 @@ async function handleGenerateQuiz(req, res) {
     const source = String(body.source || "VLearn source").slice(0, 160);
     const content = String(body.content || "").trim();
 
-    if (!content) {
-      return sendJson(res, 400, { error: "Can co noi dung de tao quiz." });
+    if (!hasEnoughContent(content)) {
+      return sendJson(res, 400, {
+        error: "Khong tim thay du noi dung chu de tao quiz. Slide co the bi loi, chi chua anh, hoac chua duoc trich xuat noi dung."
+      });
     }
 
     const traceId = `cp3-${Date.now()}`;

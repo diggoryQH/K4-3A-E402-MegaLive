@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="vi">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1139,7 +1138,6 @@
     }
 
     @media (max-width: 640px) {
-
       .main,
       .sidebar {
         padding: 18px;
@@ -1153,7 +1151,6 @@
         grid-template-columns: 1fr;
       }
     }
-
     /* Final VLearn-style redesign */
     .app {
       grid-template-columns: 386px minmax(0, 1fr);
@@ -2037,7 +2034,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="app">
     <main class="main">
@@ -2061,12 +2057,11 @@
       <div class="topbar">
         <div>
           <h2 id="screen-title">Tạo quiz từ slide VLearn</h2>
-          <p id="screen-subtitle">Học viên chọn một slide/bài giảng đã học, hệ thống tạo 20 câu để tự kiểm tra và chỉ rõ
-            phần cần ôn lại.</p>
+          <p id="screen-subtitle">Học viên chọn một slide/bài giảng đã học, hệ thống tạo 20 câu để tự kiểm tra và chỉ rõ phần cần ôn lại.</p>
         </div>
         <div class="status-pill" id="ai-status">
           <span class="dot" aria-hidden="true"></span>
-          AI thật khi chạy qua server
+          Sẵn sàng tạo quiz
         </div>
       </div>
 
@@ -2078,6 +2073,7 @@
               <select id="lesson-select">
                 <option value="day1">Day 1 - AI & LLM Foundation</option>
                 <option value="day2">Day 2 - Xác định bài toán cho AI</option>
+                <option value="failureContent">Day 3 - AI Agents & Tool Use</option>
               </select>
             </label>
 
@@ -2272,6 +2268,29 @@
             sources: [["d2-slide-hackathon.pdf", "Trang 9: Quick Problem Card."]]
           }
         ]
+      },
+      failureContent: {
+        title: "Day 3 - AI Agents & Tool Use",
+        pdf: "",
+        totalPages: 1,
+        course: "Bài giảng Day 3",
+        failureFixture: true,
+        deck: ["Agent loop", "Tools", "Memory", "Guardrails"],
+        slides: [
+          {
+            page: 1,
+            title: "Agent loop: Plan - Act - Observe",
+            section: "AI Agents",
+            subtitle: "Infographic dạng ảnh, OCR chỉ đọc được vài chữ rời",
+            content: "AI",
+            points: [
+              "Slide này là infographic ảnh nên hệ thống chỉ trích xuất được rất ít chữ.",
+              "Nội dung đọc được không đủ để tạo 20 câu quiz có nguồn.",
+              "Hệ thống cần yêu cầu chọn bài/slide khác thay vì đoán nội dung."
+            ],
+            sources: [["d3-agent-tool-use.pdf", "Trang 1: infographic Agent loop; OCR không đủ nội dung chữ."]]
+          }
+        ]
       }
     };
 
@@ -2326,6 +2345,7 @@
     const submitBtn = document.getElementById("submit-btn");
     const screenTitle = document.getElementById("screen-title");
     const screenSubtitle = document.getElementById("screen-subtitle");
+    const minimumContentChars = 120;
 
     function setStep(step) {
       document.querySelectorAll(".step").forEach((item) => {
@@ -2358,6 +2378,9 @@
     }
 
     function getLessonQuizContext(lesson) {
+      if (lesson.failureFixture) {
+        return lesson.slides.map((slide) => slide.content).join("\n").trim();
+      }
       return lesson.slides.map((slide) => [
         `Trang ${slide.page}: ${slide.title}`,
         `Chủ đề: ${slide.section}`,
@@ -2369,6 +2392,21 @@
     function getContentText() {
       const content = contentInput.value.trim();
       return content || getLessonQuizContext(lessons[state.lessonKey]);
+    }
+
+    function hasEnoughContent(content) {
+      const words = content.match(/[\p{L}\p{N}]+/gu) || [];
+      return content.length >= minimumContentChars && words.length >= 24;
+    }
+
+    function showInsufficientContentMessage(message) {
+      const status = document.getElementById("ai-status");
+      status.innerHTML = `<span class="dot" aria-hidden="true"></span> Cần thêm nội dung slide`;
+      selectedSourceText.textContent = message;
+      contentPreview.innerHTML = `
+        <strong>Không tìm thấy đủ nội dung để tạo quiz từ slide này.</strong><br />
+        <span>Slide có thể bị lỗi, chỉ chứa ảnh, hoặc hệ thống chưa đọc được chữ trong ảnh. Hãy chọn slide/bài khác rồi thử lại.</span>
+      `;
     }
 
     function excerpt(text, maxLength = 260) {
@@ -2389,7 +2427,6 @@
       const lesson = lessons[state.lessonKey];
       const currentSlide = getCurrentSlide();
       const slideLabel = `${lesson.title} - Trang ${currentSlide.page}/${lesson.totalPages}`;
-      contentInput.value = getLessonQuizContext(lesson);
       lessonTitle.textContent = currentSlide.title;
       lessonPoints.innerHTML = currentSlide.points.map((point) => `<li>${point}</li>`).join("");
       const content = getContentText();
@@ -2406,7 +2443,56 @@
           <span>${desc}</span>
         </div>
       `).join("");
-      const pdfSrc = `${window.location.origin}${lesson.pdf}#page=${currentSlide.page}&zoom=page-fit&toolbar=0&navpanes=0&scrollbar=0`;
+      const failureSlideSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+          <defs>
+            <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#eff6ff"/>
+              <stop offset="1" stop-color="#dcfce7"/>
+            </linearGradient>
+          </defs>
+          <rect width="1600" height="900" fill="url(#bg)"/>
+          <rect x="120" y="100" width="1360" height="700" rx="36" fill="#ffffff" opacity="0.86"/>
+          <text x="180" y="185" font-family="Arial, sans-serif" font-size="34" fill="#64748b">AI IN ACTION · DAY 03</text>
+          <text x="180" y="285" font-family="Arial, sans-serif" font-size="68" font-weight="700" fill="#0f172a">AI Agents &amp; Tool Use</text>
+          <circle cx="430" cy="530" r="96" fill="#bfdbfe"/>
+          <circle cx="800" cy="530" r="96" fill="#bbf7d0"/>
+          <circle cx="1170" cy="530" r="96" fill="#fde68a"/>
+          <path d="M535 530 H695" stroke="#334155" stroke-width="16" stroke-linecap="round"/>
+          <path d="M905 530 H1065" stroke="#334155" stroke-width="16" stroke-linecap="round"/>
+          <path d="M1045 500 L1105 530 L1045 560" fill="none" stroke="#334155" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M675 500 L735 530 L675 560" fill="none" stroke="#334155" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="360" y="548" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#1e3a8a">Plan</text>
+          <text x="740" y="548" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#166534">Act</text>
+          <text x="1070" y="548" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#92400e">Observe</text>
+          <text x="180" y="720" font-family="Arial, sans-serif" font-size="30" fill="#475569">Infographic exported as image; OCR result is incomplete.</text>
+        </svg>
+      `;
+      const pdfSrc = lesson.failureFixture
+        ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(failureSlideSvg)}`
+        : `${window.location.origin}${lesson.pdf}#page=${currentSlide.page}&zoom=page-fit&toolbar=0&navpanes=0&scrollbar=0`;
+      const slideMedia = lesson.failureFixture ? `
+        <div class="slide-context-card">
+          <div class="slide-kicker">${escapeHtml(currentSlide.section)}</div>
+          <h3>${escapeHtml(currentSlide.title)}</h3>
+          <p>${escapeHtml(currentSlide.subtitle)}</p>
+          <p>OCR text: "${escapeHtml(currentSlide.content)}"</p>
+        </div>
+      ` : `
+        <iframe
+          class="pdf-slide"
+          title="${escapeHtml(slideLabel)}"
+          src="${escapeHtml(pdfSrc)}"
+        ></iframe>
+        <a class="pdf-open-link" href="${escapeHtml(`${lesson.pdf}#page=${currentSlide.page}`)}" target="_blank" rel="noreferrer">
+          Má»Ÿ slide PDF trong tab má»›i náº¿u trÃ¬nh duyá»‡t khÃ´ng hiá»ƒn thá»‹ táº¡i Ä‘Ã¢y
+        </a>
+        <div class="slide-context-card">
+          <div class="slide-kicker">${escapeHtml(currentSlide.section)}</div>
+          <h3>${escapeHtml(currentSlide.title)}</h3>
+          <p>${escapeHtml(currentSlide.subtitle)}</p>
+        </div>
+      `;
 
       sourceList.innerHTML = `
         <div class="vlearn-frame" aria-label="Mô phỏng trang slide VLearn">
@@ -2583,6 +2669,7 @@
       state.quizGenerated = false;
       state.resultReady = false;
       renderLesson();
+      document.getElementById("ai-status").innerHTML = `<span class="dot" aria-hidden="true"></span> Sẵn sàng tạo quiz`;
       updateStepLocks();
     });
 
@@ -2590,6 +2677,7 @@
       state.quizGenerated = false;
       state.resultReady = false;
       renderLesson();
+      document.getElementById("ai-status").innerHTML = `<span class="dot" aria-hidden="true"></span> Sẵn sàng tạo quiz`;
       updateStepLocks();
     });
 
@@ -2624,20 +2712,25 @@
 
       const payload = await response.json();
       if (!response.ok) {
-        throw new Error(payload.error || "AI server không trả về kết quả hợp lệ.");
+        const error = new Error(payload.error || "AI server không trả về kết quả hợp lệ.");
+        error.status = response.status;
+        throw error;
       }
       return payload;
     }
 
     document.getElementById("generate-btn").addEventListener("click", async () => {
-      if (!getContentText()) {
+      const content = getContentText();
+      const insufficientContentMessage = "Không tìm thấy đủ nội dung chữ để tạo quiz. Hãy chọn slide/bài khác rồi thử lại.";
+      if (!hasEnoughContent(content)) {
+        showInsufficientContentMessage(insufficientContentMessage);
         return;
       }
       const generateBtn = document.getElementById("generate-btn");
       const status = document.getElementById("ai-status");
       generateBtn.disabled = true;
       generateBtn.textContent = "Đang gọi AI...";
-      status.innerHTML = `<span class="dot" aria-hidden="true"></span> Đang gọi AI`;
+      status.innerHTML = `<span class="dot" aria-hidden="true"></span> Đang đọc nội dung`;
       try {
         const payload = await generateQuizWithAI();
         quizBank = payload.questions.map((item) => [
@@ -2649,11 +2742,18 @@
           item.topic
         ]);
         state.aiTrace = `${payload.provider || "AI"} - ${payload.model || "model"} - trace ${payload.traceId || "local"} - ${quizBank.length} câu`;
-        status.innerHTML = `<span class="dot" aria-hidden="true"></span> AI thật`;
+        status.innerHTML = `<span class="dot" aria-hidden="true"></span> Quiz đã sẵn sàng`;
       } catch (error) {
+        if (error.status === 400) {
+          showInsufficientContentMessage(error.message || insufficientContentMessage);
+          state.quizGenerated = false;
+          state.resultReady = false;
+          updateStepLocks();
+          return;
+        }
         quizBank = [...fallbackQuizBank];
         state.aiTrace = `Fallback mock: ${error.message}. Khi quay CP3, chạy bằng node codebase/server.mjs với OPENAI_API_KEY để có AI thật.`;
-        status.innerHTML = `<span class="dot" aria-hidden="true"></span> Fallback mock`;
+        status.innerHTML = `<span class="dot" aria-hidden="true"></span> Dùng dữ liệu mẫu`;
       } finally {
         generateBtn.disabled = false;
         generateBtn.textContent = "Tạo 20 câu quiz bằng AI";
@@ -2694,5 +2794,4 @@
     updateStepLocks();
   </script>
 </body>
-
 </html>
